@@ -1,5 +1,36 @@
-<app-entete></app-entete>
+<div class="container-fluid text-center" id="titre">
+  <div class="row justify-content-between align-items-center">
+    
+    <div class="col-md-12 d-flex justify-content-between align-items-center">
+      <!-- Titre à gauche -->
+      <div class="text-start">
+        <h1>Annuaire interne</h1>
+        <p>trouver rapidement vos collegue</p>
+      </div>
+           
+       <div>
+        <div class="dropdown">
+  <a href="#" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+     class="d-flex align-items-center text-decoration-none">
+    <i class="bi bi-person-circle fs-4"></i>
+  </a>
 
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+    <li>
+      <a class="dropdown-item" href="#" (click)="parametre($event)">Paramètres personnels</a>
+    </li>
+    <li><hr class="dropdown-divider"></li>
+    <li>
+      <a class="dropdown-item text-danger" href="#" (click)="logout($event)">Déconnexion</a>
+    </li>
+  </ul>
+</div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
 
 
 <!-- Cartes d affichage des donnees -->
@@ -33,56 +64,6 @@
   <button type="button" class="btn btn-primary" (click)="showAddForm = true">Ajouter un employé</button>
 </div>
 
-<!-- modal de mon formulaire d ajout -->
-
-
-
-
-<div class="modal fade show" tabindex="-1" *ngIf="showAddForm" style="display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.3); position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1050;">
-  <div class="modal-dialog">
-    <div class="modal-content shadow-lg rounded-4 p-2">
-      <div class="modal-header border-0 pb-0">
-        <h4 class="modal-title text-primary fw-bold">Ajouter un employé</h4>
-        <button type="button" class="btn-close" (click)="showAddForm = false"></button>
-      </div>
-      <hr class="mt-0 mb-3">
-      <div class="modal-body pt-0">
-        <form [formGroup]="addEmployeeForm" (ngSubmit)="addEmployee()">
-          <div class="row g-3 justify-content-center">
-            <div class="col-md-6">
-              <label for="nom" class="form-label">Nom</label>
-              <input type="text" class="form-control" id="nom" formControlName="nom" required>
-            </div>
-            <div class="col-md-6">
-              <label for="poste" class="form-label">Poste</label>
-              <input type="text" class="form-control" id="poste" formControlName="poste" required>
-            </div>
-            <div class="col-md-6">
-              <label for="direction" class="form-label">Direction</label>
-              <input type="text" class="form-control" id="direction" formControlName="direction" required>
-            </div>
-            <div class="col-md-6">
-              <label for="service" class="form-label">Service</label>
-              <input type="text" class="form-control" id="service" formControlName="service" required>
-            </div>
-            <div class="col-md-6">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" formControlName="email" required>
-            </div>
-            <div class="col-md-6">
-              <label for="tel" class="form-label">Téléphone</label>
-              <input type="text" class="form-control" id="tel" formControlName="tel" required>
-            </div>
-          </div>
-          <div class="modal-footer border-0 mt-4 d-flex justify-content-end gap-2">
-            <button type="submit" class="btn btn-primary px-4" [disabled]="addEmployeeForm.invalid">Ajouter</button>
-            <button type="button" class="btn btn-outline-secondary px-4" (click)="showAddForm = false">Fermer</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Barre de recherche -->
 <app-search [employees]="employeeService.employees" (search)="onSearch($event)"></app-search>
@@ -100,10 +81,10 @@
       </div>
     </div>
     <div class="d-flex align-items-center">
-      <button class="btn btn-sm btn-outline-secondary me-2" title="Modifier">
+      <button class="btn btn-sm btn-outline-secondary me-2" title="Modifier" (click)="editEmployee(emp)">
         <i class="bi bi-pencil"></i>
       </button>
-      <button class="btn btn-sm btn-outline-danger me-2" title="Supprimer">
+      <button class="btn btn-sm btn-outline-danger me-2" title="Supprimer" (click)="deleteEmployee(emp)">
         <i class="bi bi-trash"></i>
       </button>
       <button class="btn btn-sm btn-outline-primary" title="Changer de rôle">
@@ -112,6 +93,60 @@
     </div>
   </li>
 </ul>
+
+
+<!-- modal de mon formulaire d ajout -->
+
+
+<div class="modal fade show" tabindex="-1" *ngIf="showAddForm" 
+     style="display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.3); position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1050;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content shadow-lg rounded-4 p-3">
+      <div class="modal-header border-0 pb-0">
+        <h4 class="modal-title text-primary fw-bold">Ajouter un employé</h4>
+        <button type="button" class="btn-close" (click)="showAddForm = false"></button>
+      </div>
+      <hr class="mt-0 mb-3">
+      <div class="modal-body pt-0">
+        <form [formGroup]="addEmployeeForm" (ngSubmit)="addEmployee()">
+          <div class="row row-cols-1 row-cols-lg-2 g-3">
+            <div class="col-12 col-lg-6">
+              <label for="nom" class="form-label">Nom</label>
+              <input type="text" class="form-control" id="nom" formControlName="nom" required>
+            </div>
+            <div class="col-12 col-lg-6">
+              <label for="poste" class="form-label">Poste</label>
+              <input type="text" class="form-control" id="poste" formControlName="poste" required>
+            </div>
+            <div class="col-12 col-lg-6">
+              <label for="direction" class="form-label">Direction</label>
+              <input type="text" class="form-control" id="direction" formControlName="direction" required>
+            </div>
+            <div class="col-12 col-lg-6">
+              <label for="service" class="form-label">Service</label>
+              <input type="text" class="form-control" id="service" formControlName="service" required>
+            </div>
+            <div class="col-12 col-lg-6">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" formControlName="email" required>
+            </div>
+            <div class="col-12 col-lg-6">
+              <label for="tel" class="form-label">Téléphone</label>
+              <input type="text" class="form-control" id="tel" formControlName="tel" required>
+            </div>
+          </div>
+
+          <div class="modal-footer border-0 mt-4 d-flex justify-content-center gap-2">
+            <button type="submit" class="btn btn-primary px-4" [disabled]="addEmployeeForm.invalid">Ajouter</button>
+            <button type="button" class="btn btn-outline-secondary px-4" (click)="showAddForm = false">Fermer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- Pour la pagination  -->
 
 <!-- Pagination -->

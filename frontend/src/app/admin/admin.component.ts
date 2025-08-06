@@ -5,6 +5,8 @@ import { EnteteComponent } from "../entete/entete.component";
 import { AccueilComponent } from "../accueil/accueil.component";
 import { SearchComponent } from "../search/search.component";
 import { EmployeeService } from '../services/employee.service';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-admin',
   standalone: true,
@@ -15,7 +17,7 @@ import { EmployeeService } from '../services/employee.service';
 export class AdminComponent {
   addEmployeeForm: FormGroup;
   showAddForm = false;
-  constructor(public employeeService: EmployeeService, private fb: FormBuilder) {
+  constructor(public employeeService: EmployeeService, private fb: FormBuilder, private router: Router) {
     this.addEmployeeForm = this.fb.group({
       nom: ['', Validators.required],
       poste: ['', Validators.required],
@@ -54,13 +56,59 @@ export class AdminComponent {
     this.showAddForm = false;
   }
 }
-  toggleAddForm() {
-    this.showAddForm = !this.showAddForm;
-  }
-  deleteEmployee(index: number) {
-    this.employeeService.employees.splice(index, 1);
-  }
- 
   
+  
+ 
+  editEmployee(employee: any) {
+    this.addEmployeeForm.patchValue(employee);
+    this.showAddForm = true;
+  }
 
+  deleteEmployee(emp: any) {
+  Swal.fire({
+    title: 'Êtes-vous sûr de vouloir supprimer cet employe?',
+    text: "Cette action est irréversible !",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Oui, supprimer',
+    cancelButtonText: 'Annuler'
+  }).then((result: any) => {
+    if (result.isConfirmed) {
+      // Supprime l'employé ici
+      const index = this.employeeService.employees.indexOf(emp);
+      if (index > -1) {
+        this.employeeService.employees.splice(index, 1);
+      }
+      Swal.fire({
+        title: 'Supprimé !',
+        text: "L'employé a été supprimé.",
+        icon: 'success',
+        showConfirmButton: true,
+        timer: 2000
+      });
+    }
+  });
+}
+
+logout(event: Event) {
+  event.preventDefault(); // Empêche le comportement par défaut du lien
+
+  Swal.fire({
+    title: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Oui, déconnecter',
+    cancelButtonText: 'Annuler'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      console.log('Déconnecté');
+      this.router.navigate(['/accueil']);
+    }
+  });
+}
+
+parametre(event: Event) {
+  event.preventDefault();
+  alert('Aucune option de paramétrage disponible pour le moment.');
+}
 }

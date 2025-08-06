@@ -9,7 +9,7 @@
   justify-content: center;
   gap: 20px; /* plus d’espace entre les cartes */
   flex-wrap: wrap; /* s’adapte sur petits écrans */
-  padding: 1rem;
+  padding: 1rem; 
 }
 
 .card {
@@ -69,4 +69,12 @@ a {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
+}
+.modal-content {
+  background-color: #fefefe;
+  border: 1px solid #78b6df;
+  border-radius: 12px;
+  padding: 20px;
+  width: 100%;
+  
 }
