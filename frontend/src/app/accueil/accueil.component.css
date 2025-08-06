@@ -38,3 +38,9 @@
   height: 45px;
   margin-right: 10px;
 }
+
+a {
+    text-decoration: none;
+    color: #007bff;
+    cursor: pointer;
+}

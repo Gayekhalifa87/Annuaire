@@ -6,13 +6,13 @@
 
 
 <!-- Barre de recherche -->
-<app-search [employees]="employees" (search)="onSearch($event)"></app-search>
+<app-search [employees]="employeeService.employees" (search)="onSearch($event)"></app-search>
 
 <!-- liste des employes -->
 
 <div class="container-fluid text-center">
   <div class="row row-cols-1 row-cols-md-3 g-4 align-items-stretch">
-    <ng-container *ngFor="let emp of paginatedEmployees">
+    <ng-container *ngFor="let emp of employeeService.paginatedEmployees">
       <div class="col d-flex h-100" id="grids">
         <div class="d-flex align-items-center text-start p-3 shadow-sm border rounded w-100 h-100">
           <div class="me-3">
@@ -20,14 +20,16 @@
           </div>
           <div class="flex-grow-1 w-100">
             <div class="d-flex justify-content-between">
-              <strong style="margin-left: -14px;">{{ emp.nom }}</strong>
-              <small class="text-muted">#{{ emp.idIP }}</small>
+              <strong style="margin-left: -14px;">{{ emp.nom }}</strong><br>
+              
             </div>
             <div style="margin-top: -11px;">{{ emp.poste }}</div>
             <div><small>✉️ {{ emp.email }}</small></div>
             <div><small>🏢 {{ emp.direction }}</small></div>
-            <div><small>{{ emp.service }}</small></div>
+            <div><small>{{ emp.service }}</small></div> <br>
+             <small class="text-muted"> IP : {{ emp.idIP }}</small>
             <div><span style="font-size: 1.2em;">📞</span> {{ emp.tel }}</div>
+            
           </div>
         </div>
       </div>
@@ -40,13 +42,13 @@
 <!-- Pagination -->
 <nav aria-label="Page navigation">
   <ul class="pagination justify-content-center">
-    <li class="page-item" [class.disabled]="currentPage === 1">
+    <li class="page-item" [class.disabled]="employeeService.currentPage === 1">
       <a class="page-link" (click)="prevPage()">Previous</a>
     </li>
-    <li class="page-item" *ngFor="let page of pages" [class.active]="currentPage === page">
+    <li class="page-item" *ngFor="let page of employeeService.pages" [class.active]="employeeService.currentPage === page">
       <a class="page-link" (click)="goToPage(page)">{{ page }}</a>
     </li>
-    <li class="page-item" [class.disabled]="currentPage === totalPages">
+    <li class="page-item" [class.disabled]="employeeService.currentPage === employeeService.totalPages">
       <a class="page-link" (click)="nextPage()">Next</a>
     </li>
   </ul>
