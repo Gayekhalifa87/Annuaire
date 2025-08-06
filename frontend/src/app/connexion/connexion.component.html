@@ -1,14 +1,40 @@
-<div class="contenu">
-<form>
-  <div class="mb-3">
-    <label for="exampleInputEmail1" class="form-label"> addresse email</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-  </div>
-  <div class="mb-3">
-    <label for="exampleInputPassword1" class="form-label">Mot de passe</label>
-    <input type="password" class="form-control" id="exampleInputPassword1">
-  </div>
 
-  <button type="submit" class="btn btn-primary" id="bouton">Connexion</button>
-</form>
+
+<div class="form-container">
+  <form [formGroup]="connexionForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Adresse email</label>
+      <input
+        type="email"
+        class="form-control"
+        id="exampleInputEmail1"
+        formControlName="email"
+      />
+      <div *ngIf="connexionForm.get('email')?.touched && connexionForm.get('email')?.invalid" class="text-danger">
+        <small *ngIf="connexionForm.get('email')?.errors?.['required']">L'email est requis.</small>
+        <small *ngIf="connexionForm.get('email')?.errors?.['email']">Format email invalide.</small>
+        <small *ngIf="connexionForm.get('email')?.errors?.['pattern']">Format email strict requis (ex: nom&#64;domaine.com).</small>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="exampleInputPassword1" class="form-label">Mot de passe</label>
+      <input
+        type="password"
+        class="form-control"
+        id="exampleInputPassword1"
+        formControlName="password"
+      />
+      <div *ngIf="connexionForm.get('password')?.touched && connexionForm.get('password')?.invalid" class="text-danger">
+        <small *ngIf="connexionForm.get('password')?.errors?.['required']">Mot de passe requis.</small>
+        <small *ngIf="connexionForm.get('password')?.errors?.['minlength']">Minimum 8 caractères.</small>
+        <small *ngIf="connexionForm.get('password')?.errors?.['pattern']">Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial.</small>
+      </div>
+    </div>
+
+   <!--  <button type="submit" class="btn btn-primary" id="bouton">Connexion</button>
+ -->
+   <button type="submit" class="btn btn-primary" id="bouton" [disabled]="connexionForm.invalid">Connexion</button>
+
+  </form>
 </div>
