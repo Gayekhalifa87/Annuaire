@@ -18,4 +18,14 @@ export class SearchComponent {
     this.search.emit(this.searchTerm);
   }
 
+  clearSearch() {
+    this.searchTerm = '';
+    this.search.emit(this.searchTerm);
+  }
+
+  quickSearch(term: string) {
+    this.searchTerm = term;
+    this.search.emit(this.searchTerm);
+  }
+
 }

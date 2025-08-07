@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SearchComponent } from "../search/search.component";
-import { EnteteComponent } from "../entete/entete.component";
-import { EmployeeService } from '../services/employee.service';
+import { SearchComponent } from "../../../components/search/search.component";
+import { EnteteComponent } from "../../../layout/entete/entete.component";
+import { EmployeeService } from '../../../core/services/employee.service';
+import { getInitials } from '../../../shared/utils/string.utils';
 
 @Component({
   selector: 'app-accueil',
@@ -30,6 +31,12 @@ export class AccueilComponent {
   goToPage(page: number) {
     this.employeeService.goToPage(page);
   }
+
+  trackByEmployee(_: number, employee: any): any {
+    return employee.idIP;
+  }
+
+  getInitials = getInitials;
 }
 
 

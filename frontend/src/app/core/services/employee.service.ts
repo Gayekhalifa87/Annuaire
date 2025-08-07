@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { Employee, PaginationInfo, SearchFilters } from '../models/employee.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmployeeService {
 
-  employees = [
+  employees: Employee[] = [
     {
       nom: 'Marie Dupont',
       prenom: 'Marie',
@@ -60,7 +61,7 @@ export class EmployeeService {
 
   searchValue: string = '';
   currentPage: number = 1;
-  itemsPerPage: number = 3;
+  readonly itemsPerPage: number = 10;
 
   setSearch(value: string) {
     this.searchValue = value;
@@ -103,5 +104,22 @@ export class EmployeeService {
 
   get pages(): number[] {
     return Array(this.totalPages).fill(0).map((x, i) => i + 1);
+  }
+
+  get currentPageNumber(): number {
+    return this.currentPage;
+  }
+
+  get searchTerm(): string {
+    return this.searchValue;
+  }
+
+  get paginationInfo(): PaginationInfo {
+    return {
+      currentPage: this.currentPage,
+      totalPages: this.totalPages,
+      itemsPerPage: this.itemsPerPage,
+      totalItems: this.filteredEmployees.length
+    };
   }
 }

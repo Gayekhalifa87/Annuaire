@@ -1,35 +1,29 @@
 import { Routes } from '@angular/router';
-import { AccueilComponent } from './accueil/accueil.component';
-import { SearchComponent } from './search/search.component';
-import { ConnexionComponent } from './connexion/connexion.component';
-import { AdminComponent } from './admin/admin.component';
 
 export const routes: Routes = [
-    {
-        path: '',
-        redirectTo: 'accueil',
-        pathMatch: 'full',
-    },
-   {
-    path : 'accueil',
-    component: AccueilComponent
-    },
-    {
-        path: 'recherche',
-        component: SearchComponent
-    },
-    {
-        path: 'connexion',
-        component: ConnexionComponent
-    },
-    {
-        path: 'admin',
-        component: AdminComponent   
-    },
-    {
-        path: '**',
-        redirectTo: 'accueil'
-
-    }
-  
+  {
+    path: '',
+    redirectTo: '/accueil',
+    pathMatch: 'full'
+  },
+  {
+    path: 'accueil', 
+    loadComponent: () => import('./pages/collaborateur/accueil/accueil.component').then(m => m.AccueilComponent)
+  },
+  {
+    path: 'connexion',
+    loadComponent: () => import('./pages/admin/connexion/connexion.component').then(m => m.ConnexionComponent)
+  },
+  {
+    path: 'admin',
+    loadComponent: () => import('./pages/admin/admin/admin.component').then(m => m.AdminComponent)
+  },
+  {
+    path: 'recherche',
+    loadComponent: () => import('./components/search/search.component').then(m => m.SearchComponent)
+  },
+  {
+    path: '**',
+    redirectTo: '/accueil'
+  }
 ];

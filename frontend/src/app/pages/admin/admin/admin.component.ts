@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EnteteComponent } from "../entete/entete.component";
-import { AccueilComponent } from "../accueil/accueil.component";
-import { SearchComponent } from "../search/search.component";
-import { EmployeeService } from '../services/employee.service';
+import { EnteteComponent } from "../../../layout/entete/entete.component";
+import { SearchComponent } from "../../../components/search/search.component";
+import { EmployeeService } from '../../../core/services/employee.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 @Component({
