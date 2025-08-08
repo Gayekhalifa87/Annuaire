@@ -111,3 +111,4 @@ parametre(event: Event) {
   alert('Aucune option de paramétrage disponible pour le moment.');
 }
 }
+

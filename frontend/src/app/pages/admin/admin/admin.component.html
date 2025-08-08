@@ -98,6 +98,8 @@
 <!-- modal de mon formulaire d ajout -->
 
 
+  
+
 <div class="modal fade show" tabindex="-1" *ngIf="showAddForm" 
      style="display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.3); position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1050;">
   <div class="modal-dialog modal-lg">
@@ -109,6 +111,12 @@
       <hr class="mt-0 mb-3">
       <div class="modal-body pt-0">
         <form [formGroup]="addEmployeeForm" (ngSubmit)="addEmployee()">
+        <!-- AJOUT FICHIER CSV -->
+          
+        <button type="button" class="btn btn-primary" >ajouter CSV</button>
+
+
+
           <div class="row row-cols-1 row-cols-lg-2 g-3">
             <div class="col-12 col-lg-6">
               <label for="nom" class="form-label">Nom</label>
