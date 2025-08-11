@@ -1,5 +1,7 @@
 const db = require('../config/db');
 
+const addHistorique = require('./historiqueModel').addHistorique;
+
 // Récupérer tous les employés
 const GetAllEmployees = async () => {
   const [rows] = await db.query('SELECT * FROM employes');
@@ -9,6 +11,11 @@ const GetAllEmployees = async () => {
 // Récupérer un employé par ID
 const GetEmployeeById = async (id) => {
   const [rows] = await db.query('SELECT * FROM employes WHERE id = ?', [id]);
+  return rows[0];
+};
+
+const GetEmployeeByEmail = async (email) => {
+  const [rows] = await db.query('SELECT * FROM employes WHERE email = ?', [email]);
   return rows[0];
 };
 
@@ -56,11 +63,29 @@ const DeleteEmployee = async (id) => {
   return result;
 };
 
+const countEmployees = async () => {
+  const [rows] = await db.query('SELECT COUNT(*) as count FROM employes');
+  return rows[0].count;
+};
+const countDepartments = async () => {
+  const [rows] = await db.query('SELECT COUNT(DISTINCT direction) as count FROM employes');
+  return rows[0].count;
+};
+const countServices = async () => {
+  const [rows] = await db.query('SELECT COUNT(DISTINCT service) as count FROM employes');
+  return rows[0].count;
+};
+
+
 module.exports = {
   GetAllEmployees,
   GetEmployeeById,
+  GetEmployeeByEmail,
   CreateEmployee,
   UpdateEmployee,
   ChangeRole,
-  DeleteEmployee
+  DeleteEmployee,
+  countEmployees,
+  countDepartments,
+  countServices
 };

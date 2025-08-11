@@ -90,7 +90,8 @@ export class AdminComponent {
 }
 
 logout(event: Event) {
-  event.preventDefault(); // Empêche le comportement par défaut du lien
+  // Empêcher le comportement par défaut du lien
+  event.preventDefault(); 
 
   Swal.fire({
     title: 'Êtes-vous sûr de vouloir vous déconnecter ?',
