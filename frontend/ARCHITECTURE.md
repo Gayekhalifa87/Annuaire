@@ -34,7 +34,7 @@ src/app/
 │   │   ├── search.component.css
 │   │   └── search.component.spec.ts
 │   └── index.ts                  # Export du composant
-│
+│             
 ├── pages/                        # Pages standalone de l'application
 │   ├── admin/                    # Pages Administration
 │   │   ├── connexion/            # Page de connexion standalone
