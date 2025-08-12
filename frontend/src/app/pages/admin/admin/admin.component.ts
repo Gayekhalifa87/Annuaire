@@ -29,6 +29,7 @@ export class AdminComponent {
     this.addEmployeeForm = this.fb.group({
       
       nom: ['', Validators.required],
+      prenom: ['',Validators.required],
       poste: ['', Validators.required],
       direction: ['', Validators.required],
       service: ['', Validators.required],

@@ -132,11 +132,6 @@ const create = async (req, res) => {
 
 
 
-
-
-
-
-
 const update = async (req, res) => {
   const { id } = req.params;
   const updatedEmploye = req.body;

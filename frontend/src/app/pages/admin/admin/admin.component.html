@@ -123,15 +123,16 @@
       <hr class="mt-0 mb-3">
       <div class="modal-body pt-0">
         <form [formGroup]="addEmployeeForm" (ngSubmit)="addEmployee()">
-          <!-- AJOUT FICHIER CSV - optionnel à cacher en mode modification -->
-          <button *ngIf="!isEditing" type="button" class="btn btn-primary mb-3">Ajouter CSV</button>
-
+        
             <div class="row g-3">
             <div class="col-12 col-lg-12">
-              <label for="nomPrenom" class="form-label"> Prénom</label>
-              <input type="text" class="form-control" id="nomPrenom" formControlName="nom"required>
+              <label for="nom" class="form-label"> nom</label>
+              <input type="text" class="form-control" id="nom" formControlName="nom"required>
             </div>
-            
+            <div>
+              <label for="prenom" class="form-label">Prenom</label>
+              <input type="text" class="form-control" id="prenom" formControlName="prenom" required>
+            </div>
             
             <div class="col-12 col-lg-12">
               <label for="poste" class="form-label">Poste</label>
@@ -153,6 +154,10 @@
               <label for="tel" class="form-label">Téléphone</label>
               <input type="text" class="form-control" id="tel" formControlName="telephone" required>
             </div>
+            <div class="col-12 col-lg-12">
+              <label for="ip" class="form-label"> IP </label>
+              <input type="text" class="form-control" id="ip" formControlName="ip" required>
+            </div>
 
             <!-- Champ rôle uniquement en ajout -->
             <div class="col-12 col-lg-12" *ngIf="!isEditing">
@@ -171,7 +176,7 @@
             <div class="col-12 col-lg-12"
                  *ngIf="!isEditing && addEmployeeForm.get('role')?.value === 'admin'">
               <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="password" formControlName="password" required>
+              <input type="password" class="form-control" id="password" formControlName="password" >
             </div>
 
           </div>

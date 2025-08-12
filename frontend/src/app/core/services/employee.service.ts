@@ -59,19 +59,6 @@ createEmployee(employee: Employee): Observable<Employee> {
 }
 
 
-/* updateEmployee(id: string, employee: Employee): Observable<Employee> {
-  const token = localStorage.getItem('token');
-  const headers = { Authorization: `Bearer ${token}` };
-
-  return this.http.put<Employee>(`${this.apiUrl}/${id}`, { headers });
-} */
-
- /*  updateEmployee(id: string, employee: Employee): Observable<Employee> {
-  const token = localStorage.getItem('token');
-  const headers = { Authorization: `Bearer ${token}` };
-
-  return this.http.put<Employee>(`${this.apiUrl}/${id}`, employee, { headers });
-} */
 
   updateEmployee(id: string, employee: Employee): Observable<Employee> {
   const token = localStorage.getItem('token');
