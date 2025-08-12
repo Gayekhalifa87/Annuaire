@@ -1,125 +1,138 @@
 import { Injectable } from '@angular/core';
 import { Employee, PaginationInfo, SearchFilters } from '../models/employee.interface';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmployeeService {
 
-  employees: Employee[] = [
-    {
-      nom: 'Marie Dupont',
-      prenom: 'Marie',
-      poste: 'Développeuse Frontend',
-      idIP: '1001',
-      email: 'marie.dupont@entreprise.com',
-      direction: 'Direction Informatique',
-      service: 'Développement Web',
-      tel: '01.23.45.67.89'
-    },
-    {
-      nom: 'Paul Martin',
-      prenom: 'Paul',
-      poste: 'Administrateur Systèmes',
-      idIP: '1002',
-      email: 'paul.martin@entreprise.com',
-      direction: 'Service Technique',
-      service: 'Support Technique',
-      tel: '01.98.76.54.32'
-    },
-    {
-      nom: 'Sophie Bernard',
-      prenom: 'Sophie',
-      poste: 'Responsable RH',
-      idIP: '1003',
-      email: 'sophie.bernard@entreprise.com',
-      direction: 'Ressources Humaines',
-      service: 'Gestion du Personnel',
-      tel: '01.11.22.33.44'
-    },
-    {
-      nom: 'Jean Lefebvre',
-      prenom: 'Jean',
-      poste: 'Chef de Projet',
-      idIP: '1004',
-      email: 'jean.lefebvre@entreprise.com',
-      direction: 'Direction de Projet',
-      service: 'Gestion de Projet',
-      tel: '77.45.97.41.22'
-    },
-    {
-      nom: ' khalifa gaye',
-      prenom: 'khalifa',
-      poste: 'Chef de Projet',
-      idIP: '0887',
-      email: 'jean.lefebvre@entreprise.com',
-      direction: 'Direction de Projet',
-      service: 'Gestion de Projet',
-      tel: '77.45.97.41.22'
-    }
-  ];
+  employees: Employee[] = [];
+  filteredEmployees: Employee[] = [];
+  paginatedEmployees: Employee[] = [];
 
-  searchValue: string = '';
-  currentPage: number = 1;
-  readonly itemsPerPage: number = 10;
+  currentPageNumber = 1;
+  totalPages = 1;
+  pages: number[] = [];
 
-  setSearch(value: string) {
-    this.searchValue = value;
-    this.currentPage = 1;
+  pageSize = 6; // nombre d'éléments par page
+
+  private apiUrl = 'http://localhost:3000/api/employes'; 
+
+  constructor(private http: HttpClient) {}
+
+  loadEmployees(): void {
+    this.http.get<Employee[]>(this.apiUrl).subscribe({
+      next: (data) => {
+        this.employees = data;
+        this.filteredEmployees = [...data];
+        this.updatePagination();
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des employés', err);
+      }
+    });
   }
 
-  get filteredEmployees() {
-    const value = this.searchValue.toLowerCase();
-    return this.employees.filter(emp =>
-      emp.nom.toLowerCase().includes(value) ||
-      (emp.prenom && emp.prenom.toLowerCase().includes(value)) ||
-      emp.idIP.includes(value)
+
+
+getEmployeeById(id: string): Observable<Employee> {
+  const token = localStorage.getItem('token');
+  const headers = { Authorization: `Bearer ${token}` };
+
+  return this.http.get<Employee>(`${this.apiUrl}/${id}`, { headers });
+}
+
+getEmployeeByEmail(email: string): Observable<Employee> {
+  const token = localStorage.getItem('token');
+  const headers = { Authorization: `Bearer ${token}` };
+
+  return this.http.get<Employee>(`${this.apiUrl}/email/${email}`, { headers });
+}
+
+createEmployee(employee: Employee): Observable<Employee> {
+  const token = localStorage.getItem('token');
+  const headers = { Authorization: `Bearer ${token}` };
+
+  return this.http.post<Employee>(this.apiUrl, employee, { headers });
+}
+
+
+/* updateEmployee(id: string, employee: Employee): Observable<Employee> {
+  const token = localStorage.getItem('token');
+  const headers = { Authorization: `Bearer ${token}` };
+
+  return this.http.put<Employee>(`${this.apiUrl}/${id}`, { headers });
+} */
+
+ /*  updateEmployee(id: string, employee: Employee): Observable<Employee> {
+  const token = localStorage.getItem('token');
+  const headers = { Authorization: `Bearer ${token}` };
+
+  return this.http.put<Employee>(`${this.apiUrl}/${id}`, employee, { headers });
+} */
+
+  updateEmployee(id: string, employee: Employee): Observable<Employee> {
+  const token = localStorage.getItem('token');
+  const headers = { Authorization: `Bearer ${token}` };
+
+  return this.http.put<Employee>(`${this.apiUrl}/${id}`, employee, { headers });
+}
+
+
+
+
+
+  deleteEmployeeById(id: string): Observable<any> {
+  const token = localStorage.getItem('token'); // ou sessionStorage
+  const headers = { Authorization: `Bearer ${token}` };
+
+  return this.http.delete(`${this.apiUrl}/${id}`, { headers });
+}
+
+switchRole(id: string): Observable<any> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
+  return this.http.patch(`${this.apiUrl}/${id}/role`, {}, { headers });
+}
+
+
+  
+
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.filteredEmployees.length / this.pageSize);
+    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    this.goToPage(this.currentPageNumber);
+  }
+
+  goToPage(page: number): void {
+    this.currentPageNumber = page;
+    const start = (page - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.paginatedEmployees = this.filteredEmployees.slice(start, end);
+  }
+
+  nextPage(): void {
+    if (this.currentPageNumber < this.totalPages) {
+      this.goToPage(this.currentPageNumber + 1);
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPageNumber > 1) {
+      this.goToPage(this.currentPageNumber - 1);
+    }
+  }
+
+  filterEmployees(query: string): void {
+    const lowerQuery = query.toLowerCase();
+    this.filteredEmployees = this.employees.filter(emp =>
+      emp.nom.toLowerCase().includes(lowerQuery) ||
+      emp.prenom.toLowerCase().includes(lowerQuery) ||
+      emp.poste.toLowerCase().includes(lowerQuery) ||
+      emp.direction.toLowerCase().includes(lowerQuery)
     );
-  }
-
-  get paginatedEmployees() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.filteredEmployees.slice(startIndex, startIndex + this.itemsPerPage);
-  }
-
-  get totalPages() {
-    return Math.ceil(this.filteredEmployees.length / this.itemsPerPage);
-  }
-
-  nextPage() {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-    }
-  }
-
-  prevPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
-
-  goToPage(page: number) {
-    this.currentPage = page;
-  }
-
-  get pages(): number[] {
-    return Array(this.totalPages).fill(0).map((x, i) => i + 1);
-  }
-
-  get currentPageNumber(): number {
-    return this.currentPage;
-  }
-
-  get searchTerm(): string {
-    return this.searchValue;
-  }
-
-  get paginationInfo(): PaginationInfo {
-    return {
-      currentPage: this.currentPage,
-      totalPages: this.totalPages,
-      itemsPerPage: this.itemsPerPage,
-      totalItems: this.filteredEmployees.length
-    };
+    this.updatePagination();
   }
 }

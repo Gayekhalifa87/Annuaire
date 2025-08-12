@@ -3,8 +3,9 @@ const express = require('express');
 
 const cors = require('cors');       
 
-const authenticateToken = require('./Middlewares/authMiddleware'); // Middleware pour vérifier les tokens JWT
-
+//commentairee a  enlever c est juste pour les tests
+ const authenticateToken = require('./Middlewares/authMiddleware'); // Middleware pour vérifier les tokens JWT
+ 
  // Middleware pour afficher les requêtes HTTP dans la console
 const morgan = require('morgan');  
 
@@ -35,14 +36,13 @@ app.use(morgan('dev'));
 app.use('/api', authRoutes);
 
 // Applique le middleware d'authentification à toutes les routes suivantes
-app.use(authenticateToken); 
+//commentaire a supprimer c est juste  pour les tests
+/*  app.use(authenticateToken);   */
 
 app.use('/api', employeRoutes);
 
 
 app.use('/api', historiqueRoutes);
-
-
 
 
 // Route d'accueil pour tester si l'API fonctionne

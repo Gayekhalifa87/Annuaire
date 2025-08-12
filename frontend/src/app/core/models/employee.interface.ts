@@ -1,4 +1,8 @@
 export interface Employee {
+role: any;
+telephone: any;
+  ip: any;
+  id: any;
   nom: string;
   prenom: string;
   poste: string;
