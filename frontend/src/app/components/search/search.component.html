@@ -57,7 +57,7 @@
         </div>
         
         <!-- Search suggestions/filters -->
-        <div class="search-filters">
+       <!--  <div class="search-filters">
           <span class="filter-label">Recherche rapide :</span>
           <button class="filter-tag" (click)="quickSearch('Direction Informatique')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -81,7 +81,19 @@
             </svg>
             RH
           </button>
-        </div>
+        </div> -->
+                   <div class="search-filters">
+  <span class="filter-label">Recherche rapide :</span>
+  <button 
+    *ngFor="let dir of directions" 
+    class="filter-tag"
+    (click)="quickSearch(dir)">
+    {{ dir }}
+  </button>
+</div>
+
+
+
       </div>
     </div>
   </div>

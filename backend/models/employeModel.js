@@ -75,7 +75,59 @@ const countServices = async () => {
   const [rows] = await db.query('SELECT COUNT(DISTINCT service) as count FROM employes');
   return rows[0].count;
 };
+const SearchEmployeesAdvanced = async (filters) => {
+  let query = "SELECT * FROM employes WHERE 1=1"; 
+  const values = [];
 
+  if (filters.global) {
+    // Recherche “OR” sur tous les champs principaux
+    query += ` AND (
+      nom LIKE ? OR 
+      prenom LIKE ? OR 
+      poste LIKE ? OR 
+      direction LIKE ? OR 
+      service LIKE ? OR 
+      ip LIKE ?
+    )`;
+    const term = `%${filters.global}%`;
+    for (let i = 0; i < 6; i++) values.push(term);
+  } else {
+    if (filters.nom) {
+      query += " AND nom LIKE ?";
+      values.push(`%${filters.nom}%`);
+    }
+    if (filters.prenom) {
+      query += " AND prenom LIKE ?";
+      values.push(`%${filters.prenom}%`);
+    }
+    if (filters.poste) {
+      query += " AND poste LIKE ?";
+      values.push(`%${filters.poste}%`);
+    }
+    if (filters.service) {
+      query += " AND service LIKE ?";
+      values.push(`%${filters.service}%`);
+    }
+    if (filters.direction) {
+      query += " AND direction LIKE ?";
+      values.push(`%${filters.direction}%`);
+    }
+    if (filters.ip) {
+      query += " AND ip LIKE ?";
+      values.push(`%${filters.ip}%`);
+    }
+  }
+
+  const [rows] = await db.query(query, values);
+  return rows;
+};
+
+
+// Récupérer toutes les directions distinctes
+const GetAllDirections = async () => {
+  const [rows] = await db.query('SELECT DISTINCT direction FROM employes');
+  return rows.map(row => row.direction); 
+}
 
 module.exports = {
   GetAllEmployees,
@@ -87,5 +139,7 @@ module.exports = {
   DeleteEmployee,
   countEmployees,
   countDepartments,
-  countServices
+  countServices,
+  SearchEmployeesAdvanced,
+  GetAllDirections
 };

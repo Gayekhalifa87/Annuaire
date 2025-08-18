@@ -51,10 +51,10 @@ export class AdminComponent {
   ngOnInit() {
     this.employeeService.loadEmployees();
   }
-  onSearch(value: string) {
+  /* onSearch(value: string) {
     this.employeeService.filterEmployees(value);
 
-  }
+  } */
 
   nextPage() {
     this.employeeService.nextPage();
@@ -98,6 +98,8 @@ export class AdminComponent {
           }
           this.resetForm();
           Swal.fire('Succès', 'Employé modifié avec succès', 'success');
+            this.employeeService.loadEmployees(); 
+            window.location.reload();              
         },
         error: (err) => {
           console.error('Erreur modification:', err);
@@ -111,9 +113,13 @@ export class AdminComponent {
           this.employeeService.employees.push(newEmp);
           this.resetForm();
           Swal.fire('Succès', 'Employé ajouté avec succès', 'success');
+            this.employeeService.loadEmployees();  
+            window.location.reload();        
         },
+        
         error: (err: any) => {
           console.error('Erreur ajout:', err);
+         
           Swal.fire('Erreur', 'Erreur lors de l\'ajout', 'error');
         }
       });
@@ -132,8 +138,7 @@ export class AdminComponent {
 
   // Met à jour la validation password si nécessaire
   this.updatePasswordValidator(this.addEmployeeForm.get('role')?.value || '');
-  console.log("mise a jour $ {{user}}")
-
+  
   this.showAddForm = true;
 }
 
@@ -172,8 +177,10 @@ export class AdminComponent {
             text: "L'employé a été supprimé.",
             icon: 'success',
             timer: 2000,
-            showConfirmButton: false
+            showConfirmButton: true
+            
           });
+          this.employeeService.loadEmployees();
         },
         error: (err) => {
           console.error('Erreur lors de la suppression', err);
@@ -204,7 +211,7 @@ onSwitchRole(id: string) {
             text: response.message,
             icon: 'success',
             timer: 2000,
-            showConfirmButton: false
+            showConfirmButton: true
           });
           this.employeeService.loadEmployees();
         },
@@ -231,7 +238,7 @@ onSwitchRole(id: string) {
     cancelButtonText: 'Annuler'
   }).then((result) => {
     if (result.isConfirmed) {
-      this.performLogout(); // on lance la déconnexion
+      this.performLogout(); 
     }
   });
 }
@@ -251,7 +258,7 @@ performLogout() {
         title: 'Déconnexion réussie',
         text: 'deconnexion reussie vous serez redirige vers l accueil.',
         icon: 'success',
-        showConfirmButton: false,
+        showConfirmButton: true,
         timer: 2000, 
         timerProgressBar: true
       }).then(() => {

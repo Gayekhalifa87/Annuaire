@@ -29,12 +29,20 @@ export class AccueilComponent {
       : '';
   }
 
-  onSearch(query: string) {
-    this.employeeService.filterEmployees(query);
-  }
+  onSearch(term: string) {
+  this.employeeService.searchEmployees({ nom: term, prenom: term, ip: term, service: term, direction: term })
+    .subscribe({
+      next: (data) => {
+        this.employeeService.filteredEmployees = data;
+        this.employeeService.updatePagination();
+      },
+      error: (err) => console.error('Erreur recherche', err)
+    });
+}
+
 
   trackByEmployee(index: number, emp: Employee) {
-    return emp.ip; // ou emp.idIP si c’est unique
+    return emp.ip; 
   }
   
   nextPage() {
@@ -48,4 +56,7 @@ export class AccueilComponent {
   goToPage(page: number) {
     this.employeeService.goToPage(page);
   }
+
+
+
 }

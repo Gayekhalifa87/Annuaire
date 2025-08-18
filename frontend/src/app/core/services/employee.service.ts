@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Employee, PaginationInfo, SearchFilters } from '../models/employee.interface';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -87,18 +87,7 @@ switchRole(id: string): Observable<any> {
 
   
 
-  updatePagination(): void {
-    this.totalPages = Math.ceil(this.filteredEmployees.length / this.pageSize);
-    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
-    this.goToPage(this.currentPageNumber);
-  }
 
-  goToPage(page: number): void {
-    this.currentPageNumber = page;
-    const start = (page - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    this.paginatedEmployees = this.filteredEmployees.slice(start, end);
-  }
 
   nextPage(): void {
     if (this.currentPageNumber < this.totalPages) {
@@ -112,6 +101,14 @@ switchRole(id: string): Observable<any> {
     }
   }
 
+  getAllDirections(): Observable<string[]> {
+  console.log('Appel getAllDirections'); // 🔹 vérification
+  return this.http.get<string[]>(`${this.apiUrl}/directions`);
+}
+
+
+
+  // ✅ Filtrage rapide côté client (nom, prénom, poste, direction)
   filterEmployees(query: string): void {
     const lowerQuery = query.toLowerCase();
     this.filteredEmployees = this.employees.filter(emp =>
@@ -122,4 +119,42 @@ switchRole(id: string): Observable<any> {
     );
     this.updatePagination();
   }
+
+
+   searchEmployees(filters: {
+    nom?: string,
+    prenom?: string,
+    ip?: string,
+    service?: string,
+    direction?: string
+  }): Observable<Employee[]> {
+    const token = localStorage.getItem('token');
+    const headers = { Authorization: `Bearer ${token}` };
+
+    let params = new HttpParams();
+    Object.keys(filters).forEach(key => {
+      const value = filters[key as keyof typeof filters];
+      if (value && value.trim() !== '') {
+        params = params.set(key, value);
+      }
+    });
+
+    console.log('Recherche params:', params.toString());
+
+    return this.http.get<Employee[]>(`${this.apiUrl}/search`, { headers, params });
+  }
+
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.filteredEmployees.length / this.pageSize);
+    this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+    this.goToPage(this.currentPageNumber);
+  }
+
+  goToPage(page: number): void {
+    this.currentPageNumber = page;
+    const start = (page - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.paginatedEmployees = this.filteredEmployees.slice(start, end);
+  }
+  
 }

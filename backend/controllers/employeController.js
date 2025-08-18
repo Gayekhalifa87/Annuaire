@@ -5,7 +5,9 @@ const {
   CreateEmployee,
   UpdateEmployee,
   ChangeRole,
-  DeleteEmployee
+  SearchEmployeesAdvanced,
+  DeleteEmployee,
+  GetAllDirections
 } = require('../models/employeModel');
 
 const { addHistorique } = require('../models/historiqueModel');
@@ -29,6 +31,20 @@ const getAll = async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la récupération des employés' });
   }
 };
+
+const { countEmployees: countEmployeesModel } = require('../models/employeModel');
+
+const countEmployees = async (req, res) => {
+  try {
+    const total = await countEmployeesModel();
+    res.json({ total });
+  } catch (error) {
+    console.error('Erreur countEmployees:', error);
+    res.status(500).json({ message: 'Erreur serveur lors du comptage' });
+  }
+};
+
+
 
 const getById = async (req, res) => {
   const { id } = req.params;
@@ -57,44 +73,6 @@ const getByEmail = async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la récupération de l\'employé' });
   }
 };
-
-/* 
-const create = async (req, res) => {
-  const newEmploye = req.body;
-
-  try {
-    // Si le rôle est admin, alors password est obligatoire
-    if (newEmploye.role === 'admin' && !newEmploye.password) {
-      return res.status(400).json({ message: 'Le mot de passe est obligatoire pour un admin' });
-    }
-
-    if (newEmploye.password) {
-      // Hachage du mot de passe seulement si password est fourni
-      const saltRounds = 10;
-      const hashedPassword = await bcrypt.hash(newEmploye.password, saltRounds);
-      newEmploye.password = hashedPassword;
-    } else {
-      // Si ce n'est pas un admin et pas de password, on peut gérer ça selon ton besoin
-      // Par exemple, créer un mot de passe temporaire ou refuser la création
-      newEmploye.password = null; // ou autre comportement
-    }
-
-    const createdEmploye = await CreateEmployee(newEmploye);
-
-    // Ajouter un historique pour la création de l'employé
-    await addHistorique(
-      createdEmploye.id,
-      'Création d\'employé',
-      `Employé ${createdEmploye.prenom} ${createdEmploye.nom} créé par ${user.prenom} ${user.nom}`
-    );
-
-    res.status(201).json(createdEmploye);
-  } catch (error) {
-    console.error('Erreur create:', error);
-    res.status(500).json({ message: 'Erreur lors de la création de l\'employé' });
-  }
-};
- */
 
 const create = async (req, res) => {
   const newEmploye = req.body;
@@ -291,9 +269,39 @@ const switchRole = async (req, res) => {
   }
 };
 
+/* // Recherche avancée
+const searchAdvanced = async (req, res) => {
+  try {
+    const filters = req.query;  // récupère tous les query params
+    const results = await SearchEmployeesAdvanced(filters);
+    res.status(200).json(results);
+  } catch (error) {
+    console.error('Erreur searchAdvanced:', error);
+    res.status(500).json({ message: 'Erreur lors de la recherche avancée' });
+  }
+}; */
+
+const searchAdvanced = async (req, res) => {
+  try {
+    const filters = req.query;  
+    const results = await SearchEmployeesAdvanced(filters);
+    res.status(200).json(results);
+  } catch (error) {
+    console.error('Erreur searchAdvanced:', error);
+    res.status(500).json({ message: 'Erreur lors de la recherche avancée' });
+  }
+};
 
 
-
+const getAllDirections = async (req, res) => {
+  try {
+    const directions = await GetAllDirections();
+    res.status(200).json(directions);
+  } catch (error) {
+    console.error('Erreur getAllDirections:', error);
+    res.status(500).json({ message: 'Erreur lors de la récupération des directions' });
+  }
+};
 
 module.exports = {
   getAll,
@@ -302,5 +310,9 @@ module.exports = {
   create, 
   update,
   remove,
-  switchRole
+  switchRole,
+  countEmployees,
+  countEmployees,
+  searchAdvanced,
+  getAllDirections
 };
