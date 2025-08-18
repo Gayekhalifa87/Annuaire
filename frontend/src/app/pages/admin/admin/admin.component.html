@@ -83,6 +83,7 @@
       <div>
         <div class="fw-bold">
           {{ emp.nom }}
+          {{emp.prenom}}
         </div>
         <span class="text-muted">{{ emp.poste }}</span><br>
         <span class="text-muted">{{ emp.direction }}</span>
@@ -125,71 +126,117 @@
       <hr class="mt-0 mb-3">
       <div class="modal-body pt-0">
         <form [formGroup]="addEmployeeForm" (ngSubmit)="addEmployee()">
-        
-            <div class="row g-3">
+          <div class="row g-3">
+
+            <!-- Nom -->
             <div class="col-12 col-lg-12">
-              <label for="nom" class="form-label"> nom</label>
-              <input type="text" class="form-control" id="nom" formControlName="nom"required>
-            </div>
-            <div>
-              <label for="prenom" class="form-label">Prenom</label>
-              <input type="text" class="form-control" id="prenom" formControlName="prenom" required>
-            </div>
-            
-            <div class="col-12 col-lg-12">
-              <label for="poste" class="form-label">Poste</label>
-              <input type="text" class="form-control" id="poste" formControlName="poste" required>
-            </div>
-            <div class="col-12 col-lg-12">
-              <label for="direction" class="form-label">Direction</label>
-              <input type="text" class="form-control" id="direction" formControlName="direction" required>
-            </div>
-            <div class="col-12 col-lg-12">
-              <label for="service" class="form-label">Service</label>
-              <input type="text" class="form-control" id="service" formControlName="service" required>
-            </div>
-            <div class="col-12 col-lg-12">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" formControlName="email" required>
-            </div>
-            <div class="col-12 col-lg-12">
-              <label for="tel" class="form-label">Téléphone</label>
-              <input type="text" class="form-control" id="tel" formControlName="telephone" required>
-            </div>
-            <div class="col-12 col-lg-12">
-              <label for="ip" class="form-label"> IP </label>
-              <input type="text" class="form-control" id="ip" formControlName="ip" required>
+              <label for="nom" class="form-label">Nom</label>
+              <input type="text" class="form-control" id="nom" formControlName="nom">
+              <div class="text-danger" *ngIf="addEmployeeForm.get('nom')?.invalid && addEmployeeForm.get('nom')?.touched">
+                Le nom est obligatoire.
+              </div>
+              <div class="text-danger" *ngIf="backendErrors?.nom">{{ backendErrors.nom }}</div>
             </div>
 
-            <!-- Champ rôle uniquement en ajout -->
+            <!-- Prénom -->
+            <div class="col-12 col-lg-12">
+              <label for="prenom" class="form-label">Prénom</label>
+              <input type="text" class="form-control" id="prenom" formControlName="prenom">
+              <div class="text-danger" *ngIf="addEmployeeForm.get('prenom')?.invalid && addEmployeeForm.get('prenom')?.touched">
+                Le prénom est obligatoire.
+              </div>
+              <div class="text-danger" *ngIf="backendErrors?.prenom">{{ backendErrors.prenom }}</div>
+            </div>
+
+            <!-- Email -->
+            <div class="col-12 col-lg-12">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" formControlName="email">
+              <div class="text-danger" *ngIf="addEmployeeForm.get('email')?.invalid && addEmployeeForm.get('email')?.touched">
+                Email invalide ou manquant.
+              </div>
+              <div class="text-danger" *ngIf="backendErrors?.email">{{ backendErrors.email }}</div>
+            </div>
+
+            <!-- Téléphone -->
+            <div class="col-12 col-lg-12">
+              <label for="tel" class="form-label">Téléphone</label>
+              <input type="text" class="form-control" id="tel" formControlName="telephone">
+              <div class="text-danger" *ngIf="addEmployeeForm.get('telephone')?.invalid && addEmployeeForm.get('telephone')?.touched">
+                Le téléphone est obligatoire.
+              </div>
+              <div class="text-danger" *ngIf="backendErrors?.telephone">{{ backendErrors.telephone }}</div>
+            </div>
+
+            <!-- IP -->
+            <div class="col-12 col-lg-12">
+              <label for="ip" class="form-label">IP</label>
+              <input type="text" class="form-control" id="ip" formControlName="ip">
+              <div class="text-danger" *ngIf="addEmployeeForm.get('ip')?.invalid && addEmployeeForm.get('ip')?.touched">
+                L'IP est obligatoire.
+              </div>
+              <div class="text-danger" *ngIf="backendErrors?.ip">{{ backendErrors.ip }}</div>
+            </div>
+
+            <div class="col-12 col-lg-12">
+              <label for="poste" class="form-label">Poste</label>
+              <input type="text" class="form-control" id="poste" formControlName="poste">
+              <!-- <div class="text-danger" *ngIf="addEmployeeForm.get('direction')?.invalid && addEmployeeForm.get('direction')?.touched">
+                L'IP est obligatoire.
+              </div> -->
+              <!-- <div class="text-danger" *ngIf="backendErrors?.ip">{{ backendErrors.ip }}</div> -->
+            </div>
+
+            <div class="col-12 col-lg-12">
+              <label for="direction" class="form-label">Direction</label>
+              <input type="text" class="form-control" id="direction" formControlName="direction">
+              <!-- <div class="text-danger" *ngIf="addEmployeeForm.get('direction')?.invalid && addEmployeeForm.get('direction')?.touched">
+                L'IP est obligatoire.
+              </div> -->
+              <!-- <div class="text-danger" *ngIf="backendErrors?.ip">{{ backendErrors.ip }}</div> -->
+            </div>
+
+            <div class="col-12 col-lg-12">
+              <label for="service" class="form-label">Service</label>
+              <input type="text" class="form-control" id="service" formControlName="service">
+              <!-- <div class="text-danger" *ngIf="addEmployeeForm.get('direction')?.invalid && addEmployeeForm.get('direction')?.touched">
+                L'IP est obligatoire.
+              </div> -->
+              <!-- <div class="text-danger" *ngIf="backendErrors?.ip">{{ backendErrors.ip }}</div> -->
+            </div>
+
+
+
+            
+
+            <!-- Rôle -->
             <div class="col-12 col-lg-12" *ngIf="!isEditing">
               <label for="role" class="form-label">Rôle</label>
-              <div class="position-relative">
-                <select class="form-control pe-5" id="role" formControlName="role" required>
-                  <option value="user" selected>User</option>
-                  <option value="admin">Admin</option>
-                </select>
-                <i class="bi bi-chevron-down position-absolute"
-                  style="top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;"></i>
+              <select class="form-control" id="role" formControlName="role">
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+
+            <!-- Mot de passe -->
+            <div class="col-12 col-lg-12" *ngIf="!isEditing && addEmployeeForm.get('role')?.value === 'admin'">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" formControlName="password">
+              <div class="text-danger" *ngIf="addEmployeeForm.get('password')?.invalid && addEmployeeForm.get('password')?.touched">
+                Le mot de passe est obligatoire pour un admin.
               </div>
             </div>
 
-            <!-- Mot de passe uniquement en ajout ET si rôle = admin -->
-            <div class="col-12 col-lg-12"
-                 *ngIf="!isEditing && addEmployeeForm.get('role')?.value === 'admin'">
-              <label for="password" class="form-label">Password</label>
-              <input type="password" class="form-control" id="password" formControlName="password" >
             </div>
 
-          </div>
-
-          <div class="modal-footer border-0 mt-4 d-flex justify-content-center gap-2">
-            <button type="submit" class="btn btn-primary px-4" [disabled]="addEmployeeForm.invalid">
-              {{ isEditing ? 'Modifier' : 'Ajouter' }}
-            </button>
-            <button type="button" class="btn btn-outline-secondary px-4" (click)="showAddForm = false">Fermer</button>
-          </div>
+            <div class="modal-footer border-0 mt-4 d-flex justify-content-center gap-2">
+              <button type="submit" class="btn btn-primary px-4" [disabled]="addEmployeeForm.invalid">
+                {{ isEditing ? 'Modifier' : 'Ajouter' }}
+              </button>
+              <button type="button" class="btn btn-outline-secondary px-4" (click)="closeForm()">Fermer</button>
+            </div>
         </form>
+
       </div>
     </div>
   </div>

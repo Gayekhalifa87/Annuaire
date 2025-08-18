@@ -14,6 +14,17 @@ const GetEmployeeById = async (id) => {
   return rows[0];
 };
 
+// Récupérer un employé par IP
+const GetEmployeeByIp = async (ip) => {
+  const [rows] = await db.query('SELECT * FROM employes WHERE ip = ?', [ip]);
+  return rows[0] || null;
+};
+
+const GetEmployeeByTel = async (telephone) => {
+  const [rows] = await db.query('SELECT * FROM employes WHERE telephone = ?', [telephone]);
+  return rows[0] || null;
+};
+
 const GetEmployeeByEmail = async (email) => {
   const [rows] = await db.query('SELECT * FROM employes WHERE email = ?', [email]);
   return rows[0];
@@ -133,6 +144,8 @@ module.exports = {
   GetAllEmployees,
   GetEmployeeById,
   GetEmployeeByEmail,
+  GetEmployeeByTel,
+  GetEmployeeByIp,
   CreateEmployee,
   UpdateEmployee,
   ChangeRole,

@@ -8,6 +8,7 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Employee } from '../../../shared';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-admin',
@@ -45,10 +46,35 @@ export class AdminComponent {
       this.updatePasswordValidator(role);
     });
   }
-
+/* 
   ngOnInit() {
     this.employeeService.loadEmployees();
-  }
+  } */
+
+    ngOnInit() {
+  this.addEmployeeForm = this.fb.group({
+    nom: ['', Validators.required],
+    prenom: ['', Validators.required],
+    poste: ['', Validators.required],
+    direction: ['', Validators.required],
+    service: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    telephone: ['', Validators.required],
+    ip: ['', Validators.required],
+    role: ['user', Validators.required],
+    password: ['']
+  });
+
+  this.addEmployeeForm.get('role')?.valueChanges.subscribe(role => {
+    const passwordControl = this.addEmployeeForm.get('password');
+    if (role === 'admin' && !this.isEditing) {
+      passwordControl?.setValidators([Validators.required]);
+    } else {
+      passwordControl?.clearValidators();
+    }
+    passwordControl?.updateValueAndValidity();
+  });
+}
 
   private updatePasswordValidator(role: string) {
     const passwordControl = this.addEmployeeForm.get('password');
@@ -60,40 +86,63 @@ export class AdminComponent {
     passwordControl?.updateValueAndValidity();
   }
 
+
+backendErrors: any = {};
+
+
   addEmployee() {
-    if (!this.addEmployeeForm.valid) return;
+  if (!this.addEmployeeForm.valid) return;
 
-    const employeeData = this.addEmployeeForm.value;
+  this.backendErrors = {}; // reset errors
+  const employeeData = this.addEmployeeForm.value;
 
-    if (this.isEditing && this.editingEmployeeId) {
-      this.employeeService.updateEmployee(this.editingEmployeeId, employeeData).subscribe({
-        next: updatedEmp => {
-          const index = this.employeeService.employees.findIndex(e => e.id === updatedEmp.id);
-          if (index !== -1) this.employeeService.employees[index] = updatedEmp;
-          this.resetForm();
-          Swal.fire('Succès', 'Employé modifié avec succès', 'success');
-          this.employeeService.loadEmployees();
-        },
-        error: err => {
-          console.error('Erreur modification:', err);
-          Swal.fire('Erreur', 'Erreur lors de la modification', 'error');
-        }
-      });
-    } else {
-      this.employeeService.createEmployee(employeeData).subscribe({
-        next: newEmp => {
-          this.employeeService.employees.push(newEmp);
-          this.resetForm();
-          Swal.fire('Succès', 'Employé ajouté avec succès', 'success');
-          this.employeeService.loadEmployees();
-        },
-        error: err => {
-          console.error('Erreur ajout:', err);
-          Swal.fire('Erreur', 'Erreur lors de l\'ajout', 'error');
-        }
-      });
+  const obs$ = this.isEditing
+    ? this.employeeService.updateEmployee(this.editingEmployeeId!, employeeData)
+    : this.employeeService.createEmployee(employeeData);
+
+  obs$.subscribe({
+    next: res => {
+      if (this.isEditing) {
+        const index = this.employeeService.employees.findIndex(e => e.id === res.id);
+        if (index !== -1) this.employeeService.employees[index] = res;
+      } else {
+        this.employeeService.employees.push(res);
+      }
+      this.resetForm();
+      Swal.fire('Succès', this.isEditing ? 'Employé modifié avec succès' : 'Employé ajouté avec succès', 'success');
+      this.employeeService.loadEmployees();
+    },
+    error: err => {
+      console.error('Erreur ajout/modif:', err);
+
+      // si backend retourne plusieurs messages
+      if (err?.error?.messages && Array.isArray(err.error.messages)) {
+        err.error.messages.forEach((msg: string) => {
+          const lowerMsg = msg.toLowerCase();
+          if (lowerMsg.includes('email')) this.backendErrors.email = msg;
+          if (lowerMsg.includes('téléphone')) this.backendErrors.telephone = msg;
+          if (lowerMsg.includes('ip')) this.backendErrors.ip = msg;
+          if (lowerMsg.includes('mot de passe')) this.backendErrors.password = msg;
+        });
+      } else {
+        Swal.fire('Erreur', 'Erreur lors de la sauvegarde de l\'employé', 'error');
+      }
     }
-  }
+  });
+}
+
+
+resetForm() {
+  this.addEmployeeForm.reset({ role: 'user' });
+  this.showAddForm = false;
+  this.isEditing = false;
+  this.editingEmployeeId = null;
+  this.backendErrors = {};
+}
+
+closeForm() {
+  this.resetForm();
+}
 
   editEmployee(employee: Employee) {
     this.isEditing = true;
@@ -103,14 +152,7 @@ export class AdminComponent {
     this.showAddForm = true;
   }
 
-  resetForm() {
-    this.isEditing = false;
-    this.editingEmployeeId = null;
-    this.addEmployeeForm.reset({ role: 'user', password: '' });
-    this.showAddForm = false;
-  }
-
-  deleteEmployee(emp: Employee) {
+ /*  deleteEmployee(emp: Employee) {
     Swal.fire({
       title: 'Êtes-vous sûr ?',
       text: "Cette action est irréversible !",
@@ -134,7 +176,40 @@ export class AdminComponent {
         });
       }
     });
-  }
+  } */
+
+    deleteEmployee(emp: Employee) {
+  Swal.fire({
+    title: 'Êtes-vous sûr ?',
+    text: "Cette action est irréversible !",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Oui, supprimer',
+    cancelButtonText: 'Annuler'
+  }).then(result => {
+    if (result.isConfirmed) {
+      this.employeeService.deleteEmployeeById(emp.id).subscribe({
+        next: () => {
+          const index = this.employeeService.employees.findIndex(e => e.id === emp.id);
+          if (index !== -1) this.employeeService.employees.splice(index, 1);
+          this.employeeService.loadEmployees();
+          Swal.fire({
+            title: 'Supprimé !',
+            text: "L'employé a été supprimé.",
+            icon: 'success',
+            timer: 2000,            // Durée en millisecondes
+            showConfirmButton: false, // Pas besoin de bouton OK
+            timerProgressBar: true   // Affiche une barre de progression
+          });
+        },
+        error: err => {
+          console.error('Erreur lors de la suppression', err);
+          Swal.fire('Erreur', 'La suppression a échoué.', 'error');
+        }
+      });
+    }
+  });
+}
 
   onSwitchRole(id: string) {
     Swal.fire({
@@ -148,7 +223,13 @@ export class AdminComponent {
       if (result.isConfirmed) {
         this.employeeService.switchRole(id).subscribe({
           next: res => {
-            Swal.fire('Succès', res.message, 'success');
+            Swal.fire({
+              title: 'changement de role',
+              text: 'changement de role reussi',
+              timer: 2000,
+              showConfirmButton: true,
+              timerProgressBar: true,
+            });
             this.employeeService.loadEmployees();
           },
           error: err => {
