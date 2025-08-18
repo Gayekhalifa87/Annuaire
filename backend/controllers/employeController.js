@@ -217,7 +217,7 @@ const remove = async (req, res) => {
 
 
 
-
+/* 
 const switchRole = async (req, res) => {
   const { id } = req.params;
 
@@ -267,19 +267,90 @@ const switchRole = async (req, res) => {
     console.error('Erreur switchRole:', error.message, error.stack);
     res.status(500).json({ message: 'Erreur lors du changement de rôle de l\'employé' });
   }
+}; */
+
+const switchRole = async (req, res) => {
+  const { id } = req.params;
+
+  console.log("👉 Requête reçue pour changer le rôle de l'employé:", id);
+  console.log("👉 Utilisateur connecté (req.user):", req.user);
+
+  try {
+    // Vérification des paramètres
+    if (!id) {
+      console.error("❌ Aucun ID d'employé fourni");
+      return res.status(400).json({ message: 'ID employé manquant' });
+    }
+
+    // Récupérer l'employé dont on change le rôle
+    const employe = await GetEmployeeById(id);
+    if (!employe) {
+      console.warn(`⚠️ Employé avec ID ${id} non trouvé`);
+      return res.status(404).json({ message: 'Employé non trouvé' });
+    }
+    console.log("✅ Employé trouvé:", employe);
+
+    // Vérifier l'utilisateur qui effectue la modification
+    if (!req.user || !req.user.id) {
+      console.error("❌ req.user est undefined ou invalide:", req.user);
+      return res.status(401).json({ message: 'Utilisateur non authentifié' });
+    }
+
+    const user = await GetEmployeeById(req.user.id);
+    if (!user) {
+      console.warn(`⚠️ Utilisateur connecté ID ${req.user.id} non trouvé dans la DB`);
+      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+    }
+    console.log("✅ Utilisateur modificateur trouvé:", user);
+
+    // Déterminer le nouveau rôle
+    const currentRole = employe.role;
+    console.log("🔍 Rôle actuel:", currentRole);
+
+    let newRole;
+    if (currentRole === 'user') {
+      newRole = 'admin';
+    } else if (currentRole === 'admin') {
+      newRole = 'user';
+    } else {
+      console.error("❌ Rôle non reconnu:", currentRole);
+      return res.status(400).json({ message: 'Rôle non reconnu pour le switch' });
+    }
+
+    // Mise à jour du rôle
+    console.log(`🔄 Tentative de mise à jour du rôle: ${currentRole} -> ${newRole}`);
+    const updatedEmploye = await ChangeRole(id, newRole);
+    if (!updatedEmploye) {
+      console.error("❌ La mise à jour du rôle a échoué pour l'employé:", id);
+      return res.status(500).json({ message: "La mise à jour du rôle a échoué" });
+    }
+    console.log("✅ Mise à jour réussie:", updatedEmploye);
+
+    // Ajouter un historique pour le changement de rôle
+    try {
+      await addHistorique(
+        req.user.id,
+        'Changement de rôle',
+        `Rôle de l'employé ${employe.prenom} ${employe.nom} changé par ${user.prenom} ${user.nom}`
+      );
+      console.log("📝 Historique ajouté avec succès");
+    } catch (histErr) {
+      console.error("⚠️ Erreur lors de l'ajout à l'historique:", histErr.message);
+    }
+
+    res.status(200).json({
+      message: `Rôle changé de ${currentRole} à ${newRole}`,
+      employe: updatedEmploye
+    });
+
+  } catch (error) {
+    console.error('💥 Erreur switchRole (catch principal):', error.message);
+    console.error(error.stack);
+    res.status(500).json({ message: 'Erreur lors du changement de rôle de l\'employé', error: error.message });
+  }
 };
 
-/* // Recherche avancée
-const searchAdvanced = async (req, res) => {
-  try {
-    const filters = req.query;  // récupère tous les query params
-    const results = await SearchEmployeesAdvanced(filters);
-    res.status(200).json(results);
-  } catch (error) {
-    console.error('Erreur searchAdvanced:', error);
-    res.status(500).json({ message: 'Erreur lors de la recherche avancée' });
-  }
-}; */
+
 
 const searchAdvanced = async (req, res) => {
   try {

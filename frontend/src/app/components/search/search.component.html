@@ -19,7 +19,7 @@
           <input
             type="text"
             class="search-input"
-            placeholder="Marie Dupont, 1001, Development..."
+            placeholder="Recherchez par nom, prénom ou numéro IP"
             [(ngModel)]="searchTerm"
             (input)="onInputChange()"
             autocomplete="off"
@@ -56,32 +56,6 @@
           </div>
         </div>
         
-        <!-- Search suggestions/filters -->
-       <!--  <div class="search-filters">
-          <span class="filter-label">Recherche rapide :</span>
-          <button class="filter-tag" (click)="quickSearch('Direction Informatique')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" stroke-width="2"/>
-            </svg>
-            Direction IT
-          </button>
-          <button class="filter-tag" (click)="quickSearch('Chef')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/>
-              <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
-              <path d="M22 21v-2a4 4 0 0 0-3-3.87" stroke="currentColor" stroke-width="2"/>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2"/>
-            </svg>
-            Management
-          </button>
-          <button class="filter-tag" (click)="quickSearch('RH')">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/>
-              <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
-            </svg>
-            RH
-          </button>
-        </div> -->
                    <div class="search-filters">
   <span class="filter-label">Recherche rapide :</span>
   <button 

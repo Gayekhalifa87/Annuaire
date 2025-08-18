@@ -35,29 +35,6 @@ const login = async (req, res) => {
   }
 };
 
-/* const logout = async (req, res) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-
-  if (!token) {
-    return res.status(400).json({ message: 'Aucun token fourni' });
-  }
-
-  try {
-    // Décoder le token pour trouver sa date d'expiration
-    const decoded = jwt.decode(token);
-    const expInSeconds = decoded.exp - Math.floor(Date.now() / 1000);
-
-    if (expInSeconds > 0) {
-      // Stocker dans Redis avec expiration automatique
-      await redisClient.setEx(`blacklist:${token}`, expInSeconds, 'true');
-    }
-
-    res.status(200).json({ message: 'Déconnexion réussie' });
-  } catch (err) {
-    res.status(400).json({ message: 'le Token n est plus valide veuillez vous reconnecter' });
-  }
-}; */
 
 const logout = async (req, res) => {
   const authHeader = req.headers['authorization'];

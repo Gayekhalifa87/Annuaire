@@ -1,24 +1,28 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api'; // Assurez-vous que l'URL correspond à celle de votre backend
+  private apiUrl = 'http://localhost:3000/api';
+  private tokenKey = 'auth_token';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  login(email: string, password: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, { email, password });
+  login(email: string, password: string): Observable<{ token: string }> {
+    return this.http.post<{ token: string }>(`${this.apiUrl}/login`, { email, password })
+      .pipe(tap(res => { if (res.token) localStorage.setItem(this.tokenKey, res.token); }));
   }
 
-  logout(token: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/logout`, {}, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
+  logout(): Observable<any> {
+    return this.http.post(`${this.apiUrl}/logout`, {}); 
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  clearToken(): void {
+    localStorage.removeItem(this.tokenKey);
   }
 }

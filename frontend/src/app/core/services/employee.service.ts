@@ -35,57 +35,49 @@ export class EmployeeService {
     });
   }
 
-
-
 getEmployeeById(id: string): Observable<Employee> {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('auth_token');
   const headers = { Authorization: `Bearer ${token}` };
 
   return this.http.get<Employee>(`${this.apiUrl}/${id}`, { headers });
 }
 
 getEmployeeByEmail(email: string): Observable<Employee> {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('auth_token');
   const headers = { Authorization: `Bearer ${token}` };
 
   return this.http.get<Employee>(`${this.apiUrl}/email/${email}`, { headers });
 }
 
 createEmployee(employee: Employee): Observable<Employee> {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('auth_token');
   const headers = { Authorization: `Bearer ${token}` };
 
   return this.http.post<Employee>(this.apiUrl, employee, { headers });
 }
 
-
-
   updateEmployee(id: string, employee: Employee): Observable<Employee> {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('auth_token');
   const headers = { Authorization: `Bearer ${token}` };
 
   return this.http.put<Employee>(`${this.apiUrl}/${id}`, employee, { headers });
 }
 
-
-
-
-
   deleteEmployeeById(id: string): Observable<any> {
-  const token = localStorage.getItem('token'); // ou sessionStorage
+  const token = localStorage.getItem('auth_token');
+  console.log('Token utilise : ', token);
   const headers = { Authorization: `Bearer ${token}` };
 
   return this.http.delete(`${this.apiUrl}/${id}`, { headers });
 }
 
-switchRole(id: string): Observable<any> {
-  const token = localStorage.getItem('token');
+
+  switchRole(id: string): Observable<any> {
+  const token = localStorage.getItem('auth_token'); // ✅ même clé que dans AuthService
+  console.log('Token utilisé :', token);
   const headers = new HttpHeaders({ Authorization: `Bearer ${token}` });
   return this.http.patch(`${this.apiUrl}/${id}/role`, {}, { headers });
 }
-
-
-  
 
 
 
@@ -156,5 +148,9 @@ switchRole(id: string): Observable<any> {
     const end = start + this.pageSize;
     this.paginatedEmployees = this.filteredEmployees.slice(start, end);
   }
+  
+
+
+
   
 }

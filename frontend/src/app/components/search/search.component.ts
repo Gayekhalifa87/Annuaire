@@ -24,7 +24,7 @@ export class SearchComponent {
   constructor(private employeeService: EmployeeService) {}
 
   ngOnInit() {
-    console.log('ngOnInit appelé'); // 🔹 vérification
+   /*  console.log('ngOnInit appelé'); */ // 🔹 vérification
     this.loadDirections();
   }
 
@@ -47,7 +47,6 @@ export class SearchComponent {
 
 }
 
-
   clearSearch() {
     this.searchTerm = '';
     this.employeeService.loadEmployees();
@@ -58,7 +57,7 @@ export class SearchComponent {
 
     this.employeeService.searchEmployees({ direction: term }).subscribe({
       next: (data) => {
-        console.log('Résultats recherche rapide:', data);
+        /* console.log('Résultats recherche rapide:', data); */
         this.employeeService.filteredEmployees = data;
         this.employeeService.updatePagination();
       },
@@ -70,7 +69,7 @@ export class SearchComponent {
     loadDirections() {
     this.employeeService.getAllDirections().subscribe({
       next: (data) => {
-        console.log('Directions reçues:', data);
+       /*  console.log('Directions reçues:', data); */
         this.directions = data;
       },
       error: (err) => console.error('Erreur directions:', err)

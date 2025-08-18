@@ -17,16 +17,16 @@ const {
 
 router.get('/employes',  getAll);
 // Recherche par nom, prénom, service ou IP
-router.get('/employes/search', authenticateToken, searchAdvanced);  
+router.get('/employes/search', searchAdvanced);  
 
 router.get('/employes/directions', getAllDirections);
 
-router.get('/employes/:id', authenticateToken, getById);
-router.get('/employes/email/:email', authenticateToken, getByEmail);
+router.get('/employes/:id', getById);
+router.get('/employes/email/:email', getByEmail);
 
 router.post('/employes', authenticateToken, create);
 router.put('/employes/:id', authenticateToken, update);
 router.delete('/employes/:id', authenticateToken, remove); 
-router.patch('/employes/:id/role', authenticateToken, switchRole);
+router.patch('/employes/:id/role',authenticateToken, switchRole);
 
 module.exports = router;
