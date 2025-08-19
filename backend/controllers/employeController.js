@@ -18,12 +18,12 @@ const { addEmployeSupprime } = require('../models/employeSupprimeModel');
 
 const db = require('../config/db'); // adapte le chemin selon ta structure
 
+const nodemailer = require('nodemailer');
 
 
 const EmployeeModel = require('../models/employeModel'); // adapte le chemin si besoin
 
 
-const bcrypt = require('bcrypt');
 
 const getAll = async (req, res) => {
   try {
@@ -247,89 +247,158 @@ const remove = async (req, res) => {
   }
 };
 
+const crypto = require('crypto');
+
+const generateResetToken = () => {
+  return crypto.randomBytes(32).toString('hex'); // token aléatoire de 64 caractères hexadécimaux
+};
+
+const setResetToken = async (id) => {
+  const token = generateResetToken();
+  const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 heure
+
+  await db.query(
+    'UPDATE employes SET resetToken = ?, resetTokenExpires = ? WHERE id = ?',
+    [token, expires, id]
+  );
+
+  return { token, expires };
+};
 
 
+const transporter = require('../config/mailer'); // ton transporteur Nodemailer
 
 const switchRole = async (req, res) => {
   const { id } = req.params;
 
-  console.log("👉 Requête reçue pour changer le rôle de l'employé:", id);
-  console.log("👉 Utilisateur connecté (req.user):", req.user);
-
   try {
-    // Vérification des paramètres
-    if (!id) {
-      console.error("❌ Aucun ID d'employé fourni");
-      return res.status(400).json({ message: 'ID employé manquant' });
-    }
+    if (!id) return res.status(400).json({ message: 'ID employé manquant' });
 
-    // Récupérer l'employé dont on change le rôle
     const employe = await GetEmployeeById(id);
-    if (!employe) {
-      console.warn(`⚠️ Employé avec ID ${id} non trouvé`);
-      return res.status(404).json({ message: 'Employé non trouvé' });
-    }
-    console.log("✅ Employé trouvé:", employe);
-
-    // Vérifier l'utilisateur qui effectue la modification
-    if (!req.user || !req.user.id) {
-      console.error("❌ req.user est undefined ou invalide:", req.user);
-      return res.status(401).json({ message: 'Utilisateur non authentifié' });
-    }
+    if (!employe) return res.status(404).json({ message: 'Employé non trouvé' });
 
     const user = await GetEmployeeById(req.user.id);
-    if (!user) {
-      console.warn(`⚠️ Utilisateur connecté ID ${req.user.id} non trouvé dans la DB`);
-      return res.status(404).json({ message: 'Utilisateur non trouvé' });
-    }
-    console.log("✅ Utilisateur modificateur trouvé:", user);
+    if (!user) return res.status(404).json({ message: 'Utilisateur non trouvé' });
 
     // Déterminer le nouveau rôle
-    const currentRole = employe.role;
-    console.log("🔍 Rôle actuel:", currentRole);
+    const newRole = employe.role === 'user' ? 'admin' : 'user';
 
-    let newRole;
-    if (currentRole === 'user') {
-      newRole = 'admin';
-    } else if (currentRole === 'admin') {
-      newRole = 'user';
-    } else {
-      console.error("❌ Rôle non reconnu:", currentRole);
-      return res.status(400).json({ message: 'Rôle non reconnu pour le switch' });
-    }
-
-    // Mise à jour du rôle
-    console.log(`🔄 Tentative de mise à jour du rôle: ${currentRole} -> ${newRole}`);
+    // Mettre à jour le rôle
     const updatedEmploye = await ChangeRole(id, newRole);
-    if (!updatedEmploye) {
-      console.error("❌ La mise à jour du rôle a échoué pour l'employé:", id);
-      return res.status(500).json({ message: "La mise à jour du rôle a échoué" });
-    }
-    console.log("✅ Mise à jour réussie:", updatedEmploye);
 
-    // Ajouter un historique pour le changement de rôle
-    try {
-      await addHistorique(
-        req.user.id,
-        'Changement de rôle',
-        `Rôle de l'employé ${employe.prenom} ${employe.nom} changé par ${user.prenom} ${user.nom}`
+    // Ajouter un historique
+    await addHistorique(
+      req.user.id,
+      'Changement de rôle',
+      `Rôle de ${employe.prenom} ${employe.nom} changé de ${employe.role} à ${newRole} par ${user.prenom} ${user.nom}`
+    );
+
+    // Si le nouvel employé devient admin, générer un token et envoyer email
+    if (newRole === 'admin') {
+      const token = crypto.randomBytes(32).toString('hex');
+      const expires = new Date(Date.now() + 60 * 60 * 1000); // 1h
+
+      // Enregistrer token dans la DB
+      await db.query(
+        'UPDATE employes SET resetToken = ?, resetTokenExpires = ? WHERE id = ?',
+        [token, expires, id]
       );
-      console.log("📝 Historique ajouté avec succès");
-    } catch (histErr) {
-      console.error("⚠️ Erreur lors de l'ajout à l'historique:", histErr.message);
+
+      // Envoyer l'email
+      await transporter.sendMail({
+        from: `"Annuaire" <${process.env.SMTP_USER}>`,
+        to: employe.email,
+        subject: 'Vous êtes maintenant admin - Définissez votre mot de passe',
+        html: `<p>Bonjour ${employe.prenom}, ${employe.nom}</p>
+               <p>Vous etes desormas administrateur dans Annuiaire </p>
+               <p>Cliquez ici pour définir votre mot de passe  : 
+                  <a href="${process.env.FRONTEND_URL}/reset-password/${token}">Définir mon mot de passe</a>
+
+                  le lien  expire dans 1h
+               </p>`
+      });
     }
 
     res.status(200).json({
-      message: `Rôle changé de ${currentRole} à ${newRole}`,
+      message: `Rôle changé de ${employe.role} à ${newRole}`,
       employe: updatedEmploye
     });
 
-  } catch (error) {
-    console.error('💥 Erreur switchRole (catch principal):', error.message);
-    console.error(error.stack);
-    res.status(500).json({ message: 'Erreur lors du changement de rôle de l\'employé', error: error.message });
+  } catch (err) {
+    console.error('Erreur switchRole:', err);
+    res.status(500).json({ message: 'Erreur lors du changement de rôle', error: err.message });
   }
 };
+
+/* const bcrypt = require('bcrypt');
+
+
+const resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+    const [rows] = await db.query(
+      'SELECT * FROM employes WHERE resetToken = ? AND resetTokenExpires > NOW()',
+      [token]
+    );
+
+    if (rows.length === 0) {
+      return res.status(400).json({ message: 'Token invalide ou expiré' });
+    }
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+
+    await db.query(
+      'UPDATE employes SET password = ?, resetToken = NULL, resetTokenExpires = NULL WHERE id = ?',
+      [hashed, rows[0].id]
+    );
+
+    res.json({ message: 'Mot de passe mis à jour avec succès' });
+  } catch (err) {
+    console.error('Erreur resetPassword:', err);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+}; */
+const bcrypt = require('bcrypt');
+
+const resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  console.log('--- RESET PASSWORD ---');
+  console.log('Token reçu:', token);
+  console.log('Nouveau mot de passe:', newPassword);
+
+  try {
+    const [rows] = await db.query(
+      'SELECT * FROM employes WHERE resetToken = ? AND resetTokenExpires > NOW()',
+      [token]
+    );
+
+    console.log('Résultat requête DB:', rows);
+
+    if (rows.length === 0) {
+      console.log('Token invalide ou expiré');
+      return res.status(400).json({ message: 'Token invalide ou expiré' });
+    }
+
+    const hashed = await bcrypt.hash(newPassword, 10);
+    console.log('Mot de passe hashé:', hashed);
+
+    await db.query(
+      'UPDATE employes SET password = ?, resetToken = NULL, resetTokenExpires = NULL WHERE id = ?',
+      [hashed, rows[0].id]
+    );
+
+    console.log('Mot de passe mis à jour pour l\'employé ID:', rows[0].id);
+    res.json({ message: 'Mot de passe mis à jour avec succès' });
+  } catch (err) {
+    console.error('Erreur resetPassword:', err);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+};
+
 
 
 
@@ -399,5 +468,8 @@ module.exports = {
   countEmployees,
   searchAdvanced,
   getAllDirections,
-  changePassword 
+  changePassword,
+  setResetToken,
+  resetPassword
+
 };

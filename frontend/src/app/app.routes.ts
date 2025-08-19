@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { ParametresComponent } from './pages/parametres/parametres.component';
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 
 
 export const routes: Routes = [
@@ -27,6 +28,9 @@ export const routes: Routes = [
   {
     path: 'parametres',
     component: ParametresComponent
+  },
+  { path: 'reset-password/:token', 
+    component: ResetPasswordComponent 
   },
   {
     path: '**',

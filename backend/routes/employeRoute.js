@@ -11,9 +11,12 @@ const {
     remove,
     switchRole,
     searchAdvanced,
-    getAllDirections
+    getAllDirections,
+    resetPassword
 } = require('../controllers/employeController');
 
+
+router.post('/employes/reset-password/:token', resetPassword);
 
 
 router.get('/employes',  getAll);
@@ -30,6 +33,7 @@ router.post('/employes', authenticateToken, create);
 router.put('/employes/:id', authenticateToken, update);
 // route dans employeeRoutes.js
 router.put('/employes/:id/password', authenticateToken, changePassword);
+
 
 router.delete('/employes/:id', authenticateToken, remove); 
 router.patch('/employes/:id/role',authenticateToken, switchRole);

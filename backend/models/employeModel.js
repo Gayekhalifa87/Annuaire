@@ -143,7 +143,6 @@ const GetAllDirections = async () => {
   return rows.map(row => row.direction); 
 }
 
-//changer motde passe
 // Changer le mot de passe d’un employé
 const ChangePassword = async (id, currentPassword, newPassword) => {
   // Récupérer l'employé
