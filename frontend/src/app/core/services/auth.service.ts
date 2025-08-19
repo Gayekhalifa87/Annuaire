@@ -9,23 +9,35 @@ import { Observable, tap } from 'rxjs';
 export class AuthService {
   private apiUrl = 'http://localhost:3000/api';
   private tokenKey = 'auth_token'; // clé pour localStorage
+  private userIdKey = 'userId';    // pour stocker l'ID utilisateur si besoin
 
   constructor(private http: HttpClient) {}
 
   // Connexion
   login(email: string, password: string) {
-  return this.http.post<{ token: string }>(`${this.apiUrl}/login`, { email, password })
-    .pipe(
-      tap(res => {
-        if (res.token) localStorage.setItem('auth_token', res.token);
-      })
-    );
+    return this.http.post<{ token: string, userId?: string }>(`${this.apiUrl}/login`, { email, password })
+      .pipe(
+        tap(res => {
+          if (res.token) {
+            localStorage.setItem(this.tokenKey, res.token);
+          }
+          if (res.userId) {
+            localStorage.setItem(this.userIdKey, res.userId);
+          }
+        })
+      );
+  }
+
+getMe(): Observable<any> {
+  const token = this.getToken();
+  const headers = { Authorization: `Bearer ${token}` };
+  return this.http.get(`${this.apiUrl}/me`, { headers });
 }
 
 
-  // Déconnexion
+  // Déconnexion (backend + localStorage)
   logout(): Observable<any> {
-    // Plus besoin de passer manuellement le token, l'interceptor s'en charge
+    this.clearToken(); // nettoie localStorage immédiatement
     return this.http.post(`${this.apiUrl}/logout`, {});
   }
 
@@ -34,13 +46,19 @@ export class AuthService {
     return localStorage.getItem(this.tokenKey);
   }
 
+  // Récupérer l'ID utilisateur stocké
+  getUserId(): string | null {
+    return localStorage.getItem(this.userIdKey);
+  }
+
   // Vérifier si connecté
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
 
-  // Supprimer le token localement après déconnexion
+  // Supprimer le token et l'ID localement après déconnexion
   clearToken(): void {
     localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.userIdKey);
   }
 }

@@ -1,5 +1,8 @@
 const db = require('../config/db');
 
+const bcrypt = require('bcrypt');
+
+
 const addHistorique = require('./historiqueModel').addHistorique;
 
 // Récupérer tous les employés
@@ -54,9 +57,9 @@ const UpdateEmployee = async (id, employee) => {
   } = employee;
 
   await db.query(
-    `UPDATE employes SET prenom = ?, nom = ?, email = ?, telephone = ?, ip = ?, role = ?, poste = ?, direction = ?, service = ?
+    `UPDATE employes SET prenom = ?, nom = ?, email = ?, telephone = ?, ip = ?, poste = ?, direction = ?, service = ?
      WHERE id = ?`,
-    [prenom, nom, email, telephone, ip, role, poste, direction, service, id]
+    [prenom, nom, email, telephone, ip, poste, direction, service, id]
   );
 
   return { id, ...employee };
@@ -140,6 +143,26 @@ const GetAllDirections = async () => {
   return rows.map(row => row.direction); 
 }
 
+//changer motde passe
+// Changer le mot de passe d’un employé
+const ChangePassword = async (id, currentPassword, newPassword) => {
+  // Récupérer l'employé
+  const employee = await GetEmployeeById(id);
+  if (!employee) throw new Error('Employé non trouvé');
+
+  // Vérifier le mot de passe actuel
+  const match = await bcrypt.compare(currentPassword, employee.password);
+  if (!match) throw new Error('Mot de passe actuel incorrect');
+
+  // Hasher le nouveau mot de passe
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  // Mettre à jour dans la base
+  await db.query('UPDATE employes SET password = ? WHERE id = ?', [hashedPassword, id]);
+
+  return { message: 'Mot de passe mis à jour avec succès' };
+};
+
 module.exports = {
   GetAllEmployees,
   GetEmployeeById,
@@ -154,5 +177,6 @@ module.exports = {
   countDepartments,
   countServices,
   SearchEmployeesAdvanced,
-  GetAllDirections
+  GetAllDirections, 
+  ChangePassword
 };

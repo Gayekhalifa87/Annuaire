@@ -20,6 +20,7 @@ const db = require('../config/db'); // adapte le chemin selon ta structure
 
 
 
+const EmployeeModel = require('../models/employeModel'); // adapte le chemin si besoin
 
 
 const bcrypt = require('bcrypt');
@@ -248,57 +249,6 @@ const remove = async (req, res) => {
 
 
 
-/* 
-const switchRole = async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    // Récupérer l'employé dont on change le rôle
-    const employe = await GetEmployeeById(id);
-    if (!employe) {
-      return res.status(404).json({ message: 'Employé non trouvé' });
-    }
-
-    // Récupérer l'utilisateur qui fait la modification (pour nom/prénom dans l'historique)
-    const user = await GetEmployeeById(req.user.id);
-    if (!user) {
-      return res.status(404).json({ message: 'Utilisateur non trouvé' });
-    }
-
-    const currentRole = employe.role;
-    console.log("Rôle actuel:", currentRole);
-
-    let newRole;
-    if (currentRole === 'user') {
-      newRole = 'admin';
-    } else if (currentRole === 'admin') {
-      newRole = 'user';
-    } else {
-      return res.status(400).json({ message: 'Rôle non reconnu pour le switch' });
-    }
-
-    const updatedEmploye = await ChangeRole(id, newRole);
-    if (!updatedEmploye) {
-      return res.status(500).json({ message: "La mise à jour du rôle a échoué" });
-    }
-
-    // Ajouter un historique pour le changement de rôle
-    await addHistorique(
-      req.user.id,
-      'Changement de rôle',
-      `Rôle de l'employé ${employe.prenom} ${employe.nom} changé  par ${user.prenom} ${user.nom}`
-    );
-
-    res.status(200).json({
-      message: `Rôle changé de ${currentRole} à ${newRole}`,
-      employe: updatedEmploye
-    });
-
-  } catch (error) {
-    console.error('Erreur switchRole:', error.message, error.stack);
-    res.status(500).json({ message: 'Erreur lors du changement de rôle de l\'employé' });
-  }
-}; */
 
 const switchRole = async (req, res) => {
   const { id } = req.params;
@@ -395,6 +345,38 @@ const searchAdvanced = async (req, res) => {
 };
 
 
+const changePassword = async (req, res) => {
+  const { current, new: newPassword, confirm } = req.body;
+  const { id } = req.params;
+
+  if (newPassword !== confirm) {
+    return res.status(400).json({ message: 'Les mots de passe ne correspondent pas' });
+  }
+
+  try {
+    const employee = await EmployeeModel.GetEmployeeById(id);
+    if (!employee) return res.status(404).json({ message: 'Employé non trouvé' });
+
+    // Vérifie le mot de passe actuel avec bcrypt
+    const match = await bcrypt.compare(current, employee.password);
+    if (!match) {
+      return res.status(400).json({ message: 'Mot de passe actuel incorrect' });
+    }
+
+    // Hasher le nouveau mot de passe
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Mettre à jour le mot de passe
+    await EmployeeModel.ChangePassword(id, current, newPassword);
+
+    res.json({ message: 'Mot de passe mis à jour avec succès' });
+  } catch (err) {
+    console.error('Erreur changement mot de passe:', err);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+};
+
+
 const getAllDirections = async (req, res) => {
   try {
     const directions = await GetAllDirections();
@@ -416,5 +398,6 @@ module.exports = {
   countEmployees,
   countEmployees,
   searchAdvanced,
-  getAllDirections
+  getAllDirections,
+  changePassword 
 };

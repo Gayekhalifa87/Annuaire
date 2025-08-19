@@ -36,6 +36,30 @@ const login = async (req, res) => {
 };
 
 
+const getMe = async (req, res) => {
+  try {
+    // On récupère l'ID de l'utilisateur depuis le token
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if (!token) return res.status(401).json({ message: 'Token manquant' });
+
+    const decoded = jwt.verify(token, secretKey);
+    const userId = decoded.id;
+
+    const employe = await employeModel.GetEmployeeById(userId);
+    if (!employe) return res.status(404).json({ message: 'Utilisateur introuvable' });
+
+    // Ne pas renvoyer le mot de passe
+    const { password, ...userData } = employe;
+    res.status(200).json(userData);
+  } catch (err) {
+    console.error(err);
+    res.status(401).json({ message: 'Token invalide' });
+  }
+};
+
+
+
 const logout = async (req, res) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -60,5 +84,5 @@ const logout = async (req, res) => {
 };
 
 
-module.exports = { login, logout };
+module.exports = { login, getMe, logout };
   

@@ -13,7 +13,7 @@ export class SettingsHeaderComponent {
 constructor(private router: Router) {}
 
   retour(): void {
-    this.router.navigate(['/']); // change '/' par la route de ton choix
+    this.router.navigate(['admin/']); // change '/' par la route de ton choix
   }
 
 }
