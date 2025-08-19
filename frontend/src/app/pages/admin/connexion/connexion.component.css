@@ -178,3 +178,32 @@
     font-size: var(--font-size-sm);
   }
 }
+
+/* L icone du champs password */
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-modern {
+  width: 100%;
+  padding: 10px 40px 10px 12px; /* espace à droite pour l’icône */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.toggle-icon {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+  font-size: 16px;
+}
+
+.toggle-icon:hover {
+  color: #333;
+}

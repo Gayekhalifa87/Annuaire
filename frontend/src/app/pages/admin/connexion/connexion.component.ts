@@ -44,6 +44,8 @@ export class ConnexionComponent implements OnInit {
     });
   }
 
+  showPassword = true
+
     onSubmit() {
   if (this.connexionForm.invalid) return;
 

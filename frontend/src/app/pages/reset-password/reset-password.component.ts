@@ -16,11 +16,16 @@ export class ResetPasswordComponent implements OnInit {
   password = '';
   confirm = '';
 
+  showPassword = false;
+  confrm = false;
+  showConfirm: any;
+
   constructor(private route: ActivatedRoute, private http: HttpClient, private router: Router) {}
 
   ngOnInit() {
     this.token = this.route.snapshot.paramMap.get('token')!;
   }
+
 
   onSubmit() {
     if (this.password !== this.confirm) {
