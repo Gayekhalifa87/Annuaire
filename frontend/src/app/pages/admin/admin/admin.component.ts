@@ -46,10 +46,6 @@ export class AdminComponent {
       this.updatePasswordValidator(role);
     });
   }
-/* 
-  ngOnInit() {
-    this.employeeService.loadEmployees();
-  } */
 
     ngOnInit() {
   this.addEmployeeForm = this.fb.group({
@@ -152,7 +148,7 @@ closeForm() {
     this.showAddForm = true;
   }
 
- /*  deleteEmployee(emp: Employee) {
+  deleteEmployee(emp: Employee) {
     Swal.fire({
       title: 'Êtes-vous sûr ?',
       text: "Cette action est irréversible !",
@@ -176,40 +172,7 @@ closeForm() {
         });
       }
     });
-  } */
-
-    deleteEmployee(emp: Employee) {
-  Swal.fire({
-    title: 'Êtes-vous sûr ?',
-    text: "Cette action est irréversible !",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Oui, supprimer',
-    cancelButtonText: 'Annuler'
-  }).then(result => {
-    if (result.isConfirmed) {
-      this.employeeService.deleteEmployeeById(emp.id).subscribe({
-        next: () => {
-          const index = this.employeeService.employees.findIndex(e => e.id === emp.id);
-          if (index !== -1) this.employeeService.employees.splice(index, 1);
-          this.employeeService.loadEmployees();
-          Swal.fire({
-            title: 'Supprimé !',
-            text: "L'employé a été supprimé.",
-            icon: 'success',
-            timer: 2000,            // Durée en millisecondes
-            showConfirmButton: false, // Pas besoin de bouton OK
-            timerProgressBar: true   // Affiche une barre de progression
-          });
-        },
-        error: err => {
-          console.error('Erreur lors de la suppression', err);
-          Swal.fire('Erreur', 'La suppression a échoué.', 'error');
-        }
-      });
-    }
-  });
-}
+  }
 
   onSwitchRole(id: string) {
     Swal.fire({
@@ -276,7 +239,7 @@ closeForm() {
 
   parametre(event: Event) {
     event.preventDefault();
-    alert('Aucune option de paramétrage disponible pour le moment.');
+    this.router.navigate(['/parametres']);
   }
 
   nextPage() {

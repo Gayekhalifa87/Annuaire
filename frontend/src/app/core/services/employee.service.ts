@@ -98,8 +98,6 @@ createEmployee(employee: Employee): Observable<Employee> {
   return this.http.get<string[]>(`${this.apiUrl}/directions`);
 }
 
-
-
   // ✅ Filtrage rapide côté client (nom, prénom, poste, direction)
   filterEmployees(query: string): void {
     const lowerQuery = query.toLowerCase();

@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { ParametresComponent } from './pages/parametres/parametres.component';
+
 
 export const routes: Routes = [
   {
@@ -21,6 +23,10 @@ export const routes: Routes = [
   {
     path: 'recherche',
     loadComponent: () => import('./components/search/search.component').then(m => m.SearchComponent)
+  },
+  {
+    path: 'parametres',
+    component: ParametresComponent
   },
   {
     path: '**',

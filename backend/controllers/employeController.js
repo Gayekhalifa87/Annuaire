@@ -75,68 +75,10 @@ const getByEmail = async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la récupération de l\'employé' });
   }
 };
-/* 
-const create = async (req, res) => {
-  const newEmploye = req.body;
-
-  try {
-    // Vérification : mot de passe obligatoire si rôle admin
-    if (newEmploye.role === 'admin' && (!newEmploye.password || newEmploye.password.trim() === '')) {
-      return res.status(400).json({ message: 'Le mot de passe est obligatoire pour un admin' });
-    }
-
-    // Vérification unicité email
-    const existingEmail = await GetEmployeeByEmail(newEmploye.email);
-    if (existingEmail) {
-      return res.status(400).json({ message: 'Cet email est déjà utilisé' });
-    }
-
-    // Vérification unicité téléphone
-    const existingTel = await GetEmployeeByTel(newEmploye.telephone);
-    if (existingTel) {
-      return res.status(400).json({ message: 'Ce téléphone est déjà utilisé' });
-    }
-
-    // Vérification unicité IP
-    const existingIP = await GetEmployeeByIp(newEmploye.ip);
-    if (existingIP) {
-      return res.status(400).json({ message: 'Cette IP est déjà utilisée' });
-    }
-
-    // Hash du mot de passe si fourni
-    if (newEmploye.password) {
-      const saltRounds = 10;
-      newEmploye.password = await bcrypt.hash(newEmploye.password, saltRounds);
-    } else {
-      newEmploye.password = null;
-    }
-
-    // Création de l'employé
-    const createdEmploye = await CreateEmployee(newEmploye);
-
-    // Historique de création
-    const user = req.user;
-    if (user) {
-      await addHistorique(
-        createdEmploye.id,
-        'Création d\'employé',
-        `Employé ${createdEmploye.prenom} ${createdEmploye.nom} créé par ${user.prenom} ${user.nom}`
-      );
-    } else {
-      console.warn('Utilisateur connecté non disponible pour l\'historique');
-    }
-
-    res.status(201).json(createdEmploye);
-
-  } catch (error) {
-    console.error('Erreur create:', error);
-    res.status(500).json({ message: 'Erreur lors de la création de l\'employé', details: error.message });
-  }
-}; */
 
 const create = async (req, res) => {
   const newEmploye = req.body;
-  const errors = []; // tableau pour accumuler toutes les erreurs
+  const errors = []; 
 
   try {
     // Vérification : mot de passe obligatoire si rôle admin

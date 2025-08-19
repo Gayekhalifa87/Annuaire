@@ -1,1 +1,85 @@
-<p>parametres works!</p>
+<app-settings-header></app-settings-header>
+<div class="container py-4">
+
+
+  <!-- === Profil === -->
+  <div class="card mb-4 shadow-sm border-0 rounded-3"  style="background: #eaf2f5;">
+    <div class="card-header bg-transparent border-0">
+      <h2 class="h5 mb-1">Informations Personnelles</h2>
+      <small class="text-muted">Gérez vos informations de profil visible dans l'annuaire</small>
+      
+    </div>
+    <div class="card-body"  style="background: #eaf2f5;">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label">Identifiant IP</label>
+          <input type="text"  class="form-control rounded-2 ">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Numéro telephone</label>
+          <input type="text"  class="form-control rounded-2 ">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Nom</label>
+          <input type="text" class="form-control rounded-2">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Prénom</label>
+          <input type="text" class="form-control rounded-2 ">
+        </div>
+        <div class="col-12">
+          <label class="form-label"> Adresse Email </label>
+          <input type="email"  class="form-control rounded-2 ">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Poste</label>
+          <input type="text"  class="form-control rounded-2 ">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Direction/Service</label>
+          <input type="text"  class="form-control rounded-2 ">
+        </div>
+      </div>
+
+      <div class="text-end mt-3">
+        <button class="btn btn-primary" type="submit"[ngStyle]="{'background': 'background: #eaf2f5;'}">
+                Enregistrer les modifications
+            </button>
+            </div>
+
+    </div>
+  </div>
+
+
+
+  <!-- === Sécurité === -->
+  <div class="card mb-4 shadow-sm border-0 rounded-3"  style="background: #deedf3;">
+    <div class="card-header bg-transparent border-0">
+      <h2 class="h5 mb-1">Sécurité</h2>
+      <small class="text-muted">Gérez la sécurité de votre compte et vos accès</small>
+    </div>
+    <div class="card-body">
+     <!--  <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
+        <div class="mb-3">
+          <label class="form-label">Mot de passe actuel</label>
+          <input type="password" formControlName="current" class="form-control rounded-2 shadow-sm border-secondary">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Nouveau mot de passe</label>
+          <input type="password" formControlName="new" class="form-control rounded-2 shadow-sm border-secondary">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Confirmer le mot de passe</label>
+          <input type="password" formControlName="confirm" class="form-control rounded-2 shadow-sm border-secondary">
+        </div>
+        <button type="submit" class="btn btn-primary shadow-sm mb-3" style="background: linear-gradient(90deg,#3b82f6,#6366f1); border:none;">
+          Mettre à jour le mot de passe
+        </button>
+      </form> -->
+
+  
+
+</div>
+
+
+
