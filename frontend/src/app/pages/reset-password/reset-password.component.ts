@@ -36,7 +36,7 @@ export class ResetPasswordComponent implements OnInit {
 
       .subscribe({
         next: (res: any) => {
-          alert(res.message);
+          /* alert(res.message); */
           this.router.navigate(['/login']);
         },
         error: (err) => {

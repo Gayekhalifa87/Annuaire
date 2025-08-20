@@ -65,4 +65,10 @@ getMe(): Observable<any> {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userIdKey);
   }
+
+
+  forgotPassword(email: string) {
+  return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+}
+
 }

@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { Token } from '@angular/compiler';
-
 @Component({
   selector: 'app-connexion',
   standalone: true,
@@ -20,6 +19,10 @@ export class ConnexionComponent implements OnInit {
 
   emailErrorMessage: string = '';
   passwordErrorMessage: string = '';
+
+  forgot() {
+  this.router.navigate(['/forgotpassword']);
+}
 
   constructor(private fb: FormBuilder) {
     this.connexionForm = this.fb.group({
@@ -45,7 +48,7 @@ export class ConnexionComponent implements OnInit {
   }
 
 
-  retour(): void {
+  forgotPassword(): void {
     this.router.navigate(['accueil/']); 
   }
 
@@ -79,4 +82,14 @@ export class ConnexionComponent implements OnInit {
     }
   });
 }
+
+
+
+
+
+
+
+ retour(): void {
+    this.router.navigate(['forgotpassword/']); 
+  }
 }

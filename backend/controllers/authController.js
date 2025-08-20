@@ -2,7 +2,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const redisClient = require('../config/redisClient');
 const employeModel = require('../models/employeModel');
-
+const db = require('../config/db')
+const crypto = require('crypto')
+const transporter = require('../config/mailer')
 const secretKey = process.env.JWT_SECRET || 'secret';
 
 const login = async (req, res) => {
@@ -84,10 +86,99 @@ const logout = async (req, res) => {
   }
 };
 
-const forgetPasswword = async => {
-  
-}
+
+const resetToken = crypto.randomBytes(32).toString('hex');
 
 
-module.exports = { login, getMe, logout };
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    // Vérifier que l'employé existe
+    const [rows] = await db.query('SELECT * FROM employes WHERE email = ?', [email]);
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Cet email n'est pas enregistré." });
+    }
+    const employe = rows[0];
+
+    // Supprimer le token existant si expiré
+    await db.query(
+      'UPDATE employes SET resetToken = NULL, resetTokenExpires = NULL WHERE id = ? AND resetTokenExpires <= NOW()',
+      [employe.id]
+    );
+
+    // Générer un token aléatoire
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 heure
+
+    // Enregistrer le token et la date d'expiration en DB
+    await db.query('UPDATE employes SET resetToken = ?, resetTokenExpires = ? WHERE id = ?', [
+      resetToken,
+      expires,
+      employe.id
+    ]);
+
+    // Lien de réinitialisation
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+
+    // Envoyer l'email
+    await transporter.sendMail({
+      from: `"Annuaire" <${process.env.SMTP_USER}>`,
+      to: employe.email,
+      subject: 'Réinitialisation de votre mot de passe',
+      html: `
+        <p>Bonjour ${employe.prenom} ${employe.nom},</p>
+        <p>Vous avez demandé à réinitialiser votre mot de passe.</p>
+        <p>Cliquez sur le lien ci-dessous pour créer un nouveau mot de passe :</p>
+        <a href="${resetLink}">${resetLink}</a>
+        <p>Ce lien expirera dans 1 heure.</p>
+      `
+    });
+
+    res.status(200).json({ message: 'Un email de réinitialisation a été envoyé.' });
+
+  } catch (error) {
+    console.error('Erreur forgotPassword:', error);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+    // Vérifier que le token est valide et pas expiré
+    const [rows] = await db.query(
+      'SELECT * FROM employes WHERE resetToken = ? AND resetTokenExpires > NOW()',
+      [token]
+    );
+
+    if (rows.length === 0) {
+      return res.status(400).json({ message: 'Token invalide ou expiré.' });
+    }
+
+    const employe = rows[0];
+
+    // Hasher le nouveau mot de passe
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Mettre à jour le mot de passe et supprimer le token
+    await db.query(
+      'UPDATE employes SET password = ?, resetToken = NULL, resetTokenExpires = NULL WHERE id = ?',
+      [hashedPassword, employe.id]
+    );
+
+    res.status(200).json({ message: 'Mot de passe mis à jour avec succès.' });
+
+  } catch (error) {
+    console.error('Erreur resetPassword:', error);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+};
+
+
+
+
+module.exports = { login, getMe, logout, resetPassword, forgotPassword   };
   

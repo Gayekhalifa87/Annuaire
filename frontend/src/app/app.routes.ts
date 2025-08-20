@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { ParametresComponent } from './pages/parametres/parametres.component';
 import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 
 
 export const routes: Routes = [
@@ -16,6 +17,10 @@ export const routes: Routes = [
   {
     path: 'connexion',
     loadComponent: () => import('./pages/admin/connexion/connexion.component').then(m => m.ConnexionComponent)
+  },
+  {
+    path: 'forgotpassword',
+    component: ForgotPasswordComponent
   },
   {
     path: 'admin',
