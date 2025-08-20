@@ -47,6 +47,11 @@ export class AdminComponent {
     });
   }
 
+   
+  loadEmployees() {
+    this.employeeService.loadEmployees();
+  }
+
     ngOnInit() {
   this.addEmployeeForm = this.fb.group({
     nom: ['', Validators.required],
@@ -58,7 +63,9 @@ export class AdminComponent {
     telephone: ['', Validators.required],
     ip: ['', Validators.required],
     role: ['user', Validators.required],
-    password: ['']
+    /* password: [''] */
+
+    
   });
 
   this.addEmployeeForm.get('role')?.valueChanges.subscribe(role => {
@@ -70,6 +77,8 @@ export class AdminComponent {
     }
     passwordControl?.updateValueAndValidity();
   });
+
+  this.employeeService.loadEmployees();
 }
 
   private updatePasswordValidator(role: string) {
@@ -163,7 +172,7 @@ closeForm() {
             const index = this.employeeService.employees.findIndex(e => e.id === emp.id);
             if (index !== -1) this.employeeService.employees.splice(index, 1);
             this.employeeService.loadEmployees();
-            Swal.fire('Supprimé !', "L'employé a été supprimé.", 'success');
+            Swal.fire('Supprimé !', "L'employé a été supprimé.", 'success',);
           },
           error: err => {
             console.error('Erreur lors de la suppression', err);

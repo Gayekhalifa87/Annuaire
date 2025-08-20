@@ -1,3 +1,4 @@
+
 .login-container {
   display: flex;
   justify-content: center;
@@ -5,6 +6,7 @@
   min-height: 100vh;
   background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
   padding: var(--spacing-4);
+  height: 60vh;
 }
 
 .login-card {
@@ -188,7 +190,7 @@
 
 .input-modern {
   width: 100%;
-  padding: 10px 40px 10px 12px; /* espace à droite pour l’icône */
+  padding: 10px 40px 10px 12px; 
   border: 1px solid #ccc;
   border-radius: 8px;
   font-size: 14px;

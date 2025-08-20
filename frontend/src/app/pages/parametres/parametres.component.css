@@ -1,4 +1,7 @@
-
+#back {
+  box-shadow: red;
+  border: red;
+}
 .btn-gradient {
   background: linear-gradient(135deg, #007bff, #6610f2);
   border: none;
@@ -15,7 +18,7 @@
 
 /* Carte */
 .reset-card {
-  background: #fff;
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
   padding: 2rem;
   border-radius: 16px;
   box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
@@ -77,5 +80,36 @@ button {
 }
 
 button:hover {
-  background: #00c6ff;
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+}
+
+
+
+/* securite */
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-modern {
+  width: 100%;
+  padding: 10px 40px 10px 12px; 
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.toggle-icon {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+  font-size: 16px;
+}
+
+.toggle-icon:hover {
+  color: #333;
 }

@@ -1,6 +1,7 @@
 <app-settings-header></app-settings-header>
-<div class="container py-4">
-  <div class="card mb-4 shadow-sm border-0 rounded-3" style="background: #eaf2f5;">
+
+  <div class="container py-4">
+  <div class="card mb-4 shadow-sm border-0 rounded-3" >
     <div class="card-header bg-transparent border-0">
       <h2 class="h5 mb-1">Informations Personnelles</h2>
       <small class="text-muted">Gérez vos informations de profil visible dans l'annuaire</small>
@@ -51,36 +52,40 @@
 
 
   <!-- === Sécurité === -->
-<div class="card mb-4 shadow-sm border-0 rounded-3" style="background: #deedf3;">
-  <div class="card-header bg-transparent border-0">
-    <h2 class="h5 mb-1">Sécurité</h2>
-    <small class="text-muted">Gérez la sécurité de votre compte et vos accès</small>
-  </div>
-  <div class="card-body">
+    <div class="card mb-4 shadow-sm border-0 rounded-3">
+      <div class="card-header bg-transparent border-0">
+        <h2 class="h5 mb-1">Sécurité</h2>
+        <small class="text-muted">Gérez la sécurité de votre compte et vos accès</small>
+      </div>
+      <div class="card-body">
     <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
-  <div class="mb-3">
-    <label class="form-label">Mot de passe actuel</label>
-    <input type="password" formControlName="current" class="form-control rounded-2 shadow-sm border-secondary">
-  </div>
-  <div class="mb-3">
-    <label class="form-label">Nouveau mot de passe</label>
-    <input type="password" formControlName="new" class="form-control rounded-2 shadow-sm border-secondary">
-  </div>
-  <div class="mb-3">
-    <label class="form-label">Confirmer le mot de passe</label>
-    <input type="password" formControlName="confirm" class="form-control rounded-2 shadow-sm border-secondary">
-        <div *ngIf="passwordForm.errors?.['mismatch']" class="text-danger mt-1">
-           Les mots de passe ne correspondent pas
-        </div>
+      <div class="mb-3">
+        <label class="form-label">Mot de passe actuel</label>
+        <input type="password" formControlName="current" class="form-control rounded-2 ">
+        
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Nouveau mot de passe</label>
+        <input type="password" formControlName="new" class="form-control rounded-2 ">
+        
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Confirmer le mot de passe</label>
+        <input type="password" formControlName="confirm" class="form-control rounded-2 " >
+        
+            <div *ngIf="passwordForm.errors?.['mismatch']" class="text-danger mt-1">
+              Les mots de passe ne correspondent pas
+            </div>
 
-  </div>
-  <button type="submit" class="btn btn-primary shadow-sm mb-3" style="background: linear-gradient(90deg,#3b82f6,#6366f1); border:none;">
-    Mettre à jour le mot de passe
-  </button>
-</form>
+      </div>
+      <button type="submit" class="btn btn-primary shadow-sm mb-3" >
+        Mettre à jour le mot de passe
+      </button>
+    </form>
 
-  </div>
-</div>
+      </div>
+    </div>
 
 
-</div>
+ </div>
+

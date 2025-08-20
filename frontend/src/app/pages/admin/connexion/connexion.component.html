@@ -1,3 +1,9 @@
+       <!-- Bouton retour -->
+      <button class="btn btn-light d-flex align-items-center gap-1" 
+              (click)="retour()">
+        <i class="bi bi-arrow-left"></i> Retour
+      </button>
+
 <div class="login-container">
   <div class="login-card slide-up">
     <div class="login-header">
@@ -39,7 +45,7 @@
       </div>
 
       <!-- Champ Mot de passe -->
-      <div class="form-group">
+    <div class="form-group">
         <label for="password" class="form-label">Mot de passe</label>
         <div class="input-wrapper">
           <div class="input-icon">
@@ -54,19 +60,20 @@
         <i class="fa-solid" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
       </span> -->
       <div class="input-wrapper">
-  <input 
-    [type]="showPassword ? 'text' : 'password'" 
-    class="input-modern" 
-    id="password" 
-    formControlName="password" 
-    placeholder="Votre mot de passe" />
+        <input 
+          [type]="showPassword ? 'text' : 'password'" 
+          class="input-modern" 
+          id="password" 
+          formControlName="password" 
+          placeholder="Votre mot de passe"
+          autocomplete="off" />
 
-  <i class="fa-solid toggle-icon" 
-     [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'" 
-     (click)="showPassword = !showPassword">
-  </i>
-</div>
-        </div>
+        <i class="fa-solid toggle-icon" 
+            [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'" 
+            (click)="showPassword = !showPassword">
+        </i>
+     </div>
+   </div>
 
         <!-- Message serveur spécifique au champ password -->
         <div *ngIf="passwordErrorMessage && connexionForm.get('password')?.touched" class="error-message">
@@ -79,12 +86,13 @@
           <small *ngIf="connexionForm.get('password')?.errors?.['minlength']" class="error-message">Minimum 8 caractères.</small>
           <small *ngIf="connexionForm.get('password')?.errors?.['pattern']" class="error-message">Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial.</small>
         </div>
-      </div>
+   </div>
 
       <button type="submit" class="btn-modern btn-primary login-button" [disabled]="connexionForm.invalid" [class.loading]="false">
         Se connecter
       </button>
 
     </form>
+    <a href="#">mot de passe oublie</a>
   </div>
 </div>

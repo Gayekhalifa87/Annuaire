@@ -17,8 +17,10 @@ import Swal from 'sweetalert2';
 })
 export class ParametresComponent implements OnInit {
   profileForm: FormGroup;
-  passwordForm: FormGroup;  // <-- nouveau
+  passwordForm: FormGroup;  
   userId: string = '';
+
+  showPassword = true;
 
   constructor(
     private fb: FormBuilder,
@@ -44,6 +46,8 @@ export class ParametresComponent implements OnInit {
       confirm: ['', Validators.required]
     }, { validator: this.passwordMatchValidator });
   }
+
+  
 
   ngOnInit() {
     this.authService.getMe().subscribe({
@@ -92,12 +96,12 @@ export class ParametresComponent implements OnInit {
   this.employeeService.changePassword(this.userId, current, newPass, confirm)
     .subscribe({
       next: (res) => {
-        // Affiche SweetAlert avec timer
+        
         Swal.fire({
           icon: 'success',
           title: 'Mot de passe mis à jour !',
           text: res.message,
-          timer: 2000,        // 2 secondes
+          timer: 2000,        
           showConfirmButton: false
         });
 

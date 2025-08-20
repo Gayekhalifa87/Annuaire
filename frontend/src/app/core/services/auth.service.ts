@@ -36,10 +36,14 @@ getMe(): Observable<any> {
 
 
   // Déconnexion (backend + localStorage)
+
   logout(): Observable<any> {
-    this.clearToken(); // nettoie localStorage immédiatement
-    return this.http.post(`${this.apiUrl}/logout`, {});
-  }
+  const token = this.getToken(); 
+  const headers = { Authorization: `Bearer ${token}` };
+
+  return this.http.post(`${this.apiUrl}/logout`, {}, { headers });
+}
+
 
   // Récupérer le token actuel
   getToken(): string | null {

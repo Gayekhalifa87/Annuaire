@@ -16,15 +16,13 @@ const { addHistorique } = require('../models/historiqueModel');
 
 const { addEmployeSupprime } = require('../models/employeSupprimeModel');
 
-const db = require('../config/db'); // adapte le chemin selon ta structure
+const db = require('../config/db'); 
 
+//pour l envoi d email
 const nodemailer = require('nodemailer');
 
 
-const EmployeeModel = require('../models/employeModel'); // adapte le chemin si besoin
-
-
-
+const EmployeeModel = require('../models/employeModel');
 const getAll = async (req, res) => {
   try {
     const employes = await GetAllEmployees();
@@ -46,8 +44,6 @@ const countEmployees = async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur lors du comptage' });
   }
 };
-
-
 
 const getById = async (req, res) => {
   const { id } = req.params;
@@ -213,7 +209,6 @@ const remove = async (req, res) => {
   ]
 );
 
-
     // Récupérer et archiver tous les historiques liés
     const [historiques] = await connection.query('SELECT * FROM historiques WHERE employe_id = ?', [id]);
     for (const h of historiques) {
@@ -265,7 +260,6 @@ const setResetToken = async (id) => {
   return { token, expires };
 };
 
-
 const transporter = require('../config/mailer'); // ton transporteur Nodemailer
 
 const switchRole = async (req, res) => {
@@ -314,8 +308,9 @@ const switchRole = async (req, res) => {
                <p>Cliquez ici pour définir votre mot de passe  : 
                   <a href="${process.env.FRONTEND_URL}/reset-password/${token}">Définir mon mot de passe</a>
 
-                  le lien  expire dans 1h
-               </p>`
+               </p>
+               le lien expire dans 1eure
+               `
       });
     }
 
@@ -330,36 +325,6 @@ const switchRole = async (req, res) => {
   }
 };
 
-/* const bcrypt = require('bcrypt');
-
-
-const resetPassword = async (req, res) => {
-  const { token } = req.params;
-  const { newPassword } = req.body;
-
-  try {
-    const [rows] = await db.query(
-      'SELECT * FROM employes WHERE resetToken = ? AND resetTokenExpires > NOW()',
-      [token]
-    );
-
-    if (rows.length === 0) {
-      return res.status(400).json({ message: 'Token invalide ou expiré' });
-    }
-
-    const hashed = await bcrypt.hash(newPassword, 10);
-
-    await db.query(
-      'UPDATE employes SET password = ?, resetToken = NULL, resetTokenExpires = NULL WHERE id = ?',
-      [hashed, rows[0].id]
-    );
-
-    res.json({ message: 'Mot de passe mis à jour avec succès' });
-  } catch (err) {
-    console.error('Erreur resetPassword:', err);
-    res.status(500).json({ message: 'Erreur serveur' });
-  }
-}; */
 const bcrypt = require('bcrypt');
 
 const resetPassword = async (req, res) => {
@@ -413,7 +378,6 @@ const searchAdvanced = async (req, res) => {
   }
 };
 
-
 const changePassword = async (req, res) => {
   const { current, new: newPassword, confirm } = req.body;
   const { id } = req.params;
@@ -444,7 +408,6 @@ const changePassword = async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur' });
   }
 };
-
 
 const getAllDirections = async (req, res) => {
   try {

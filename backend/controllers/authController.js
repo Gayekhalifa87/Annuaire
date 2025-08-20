@@ -60,6 +60,7 @@ const getMe = async (req, res) => {
 
 
 
+
 const logout = async (req, res) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -82,6 +83,10 @@ const logout = async (req, res) => {
     res.status(400).json({ message: 'Le token n\'est plus valide, veuillez vous reconnecter' });
   }
 };
+
+const forgetPasswword = async => {
+  
+}
 
 
 module.exports = { login, getMe, logout };

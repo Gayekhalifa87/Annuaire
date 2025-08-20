@@ -42,21 +42,21 @@
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Total employés</h5>
-      <p class="card-text">869</p>
+      <p class="card-text">6</p>
     </div>
   </div>
 
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Total département</h5>
-      <p class="card-text">7</p>
+      <p class="card-text">2</p>
     </div>
   </div>
 
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Total services</h5>
-      <p class="card-text">18</p>
+      <p class="card-text">3</p>
     </div>
   </div>
 </div>
@@ -129,8 +129,8 @@
           <div class="row g-3">
 
             <!-- Nom -->
-            <div class="col-12 col-lg-12">
-              <label for="nom" class="form-label">Nom</label>
+            <div class="col-12 col-lg-6">
+              <label for="nom" class="form-label"><label for="*" id="obligatoire">*</label>Nom</label>
               <input type="text" class="form-control" id="nom" formControlName="nom">
               <div class="text-danger" *ngIf="addEmployeeForm.get('nom')?.invalid && addEmployeeForm.get('nom')?.touched">
                 Le nom est obligatoire.
@@ -139,8 +139,8 @@
             </div>
 
             <!-- Prénom -->
-            <div class="col-12 col-lg-12">
-              <label for="prenom" class="form-label">Prénom</label>
+            <div class="col-12 col-lg-6">
+              <label for="prenom" class="form-label"><label for="*" id="obligatoire">*</label>Prénom</label>
               <input type="text" class="form-control" id="prenom" formControlName="prenom">
               <div class="text-danger" *ngIf="addEmployeeForm.get('prenom')?.invalid && addEmployeeForm.get('prenom')?.touched">
                 Le prénom est obligatoire.
@@ -149,18 +149,18 @@
             </div>
 
             <!-- Email -->
-            <div class="col-12 col-lg-12">
-              <label for="email" class="form-label">Email</label>
+            <div class="col-12 col-lg-6">
+              <label for="email" class="form-label"><label for="*" id="obligatoire">*</label>Email</label>
               <input type="email" class="form-control" id="email" formControlName="email">
               <div class="text-danger" *ngIf="addEmployeeForm.get('email')?.invalid && addEmployeeForm.get('email')?.touched">
-                Email invalide ou manquant.
+                Adresse Email obligatoire.
               </div>
               <div class="text-danger" *ngIf="backendErrors?.email">{{ backendErrors.email }}</div>
             </div>
 
             <!-- Téléphone -->
-            <div class="col-12 col-lg-12">
-              <label for="tel" class="form-label">Téléphone</label>
+            <div class="col-12 col-lg-6">
+              <label for="tel" class="form-label"><label for="*" id="obligatoire">*</label>Téléphone</label>
               <input type="text" class="form-control" id="tel" formControlName="telephone">
               <div class="text-danger" *ngIf="addEmployeeForm.get('telephone')?.invalid && addEmployeeForm.get('telephone')?.touched">
                 Le téléphone est obligatoire.
@@ -169,8 +169,8 @@
             </div>
 
             <!-- IP -->
-            <div class="col-12 col-lg-12">
-              <label for="ip" class="form-label">IP</label>
+            <div class="col-12 col-lg-6">
+              <label for="ip" class="form-label"><label for="*" id="obligatoire">*</label>IP</label>
               <input type="text" class="form-control" id="ip" formControlName="ip">
               <div class="text-danger" *ngIf="addEmployeeForm.get('ip')?.invalid && addEmployeeForm.get('ip')?.touched">
                 L'IP est obligatoire.
@@ -178,36 +178,23 @@
               <div class="text-danger" *ngIf="backendErrors?.ip">{{ backendErrors.ip }}</div>
             </div>
 
-            <div class="col-12 col-lg-12">
+            <div class="col-12 col-lg-6">
               <label for="poste" class="form-label">Poste</label>
               <input type="text" class="form-control" id="poste" formControlName="poste">
             </div>
 
-            <div class="col-12 col-lg-12">
+            <div class="col-12 col-lg-6">
               <label for="direction" class="form-label">Direction</label>
               <input type="text" class="form-control" id="direction" formControlName="direction">
             </div>
 
-            <div class="col-12 col-lg-12">
+            <div class="col-12 col-lg-6">
               <label for="service" class="form-label">Service</label>
               <input type="text" class="form-control" id="service" formControlName="service">
             </div>
 
-
-
-            
-
-            <!-- Rôle -->
-            <div class="col-12 col-lg-12" *ngIf="!isEditing">
-              <label for="role" class="form-label">Rôle</label>
-              <select class="form-control" id="role" formControlName="role">
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-              </select>
-            </div>
-
             <!-- Mot de passe -->
-            <div class="col-12 col-lg-12" *ngIf="!isEditing && addEmployeeForm.get('role')?.value === 'admin'">
+            <div class="col-12 col-lg-6" *ngIf="!isEditing && addEmployeeForm.get('role')?.value === 'admin'">
               <label for="password" class="form-label">Password</label>
               <input type="password" class="form-control" id="password" formControlName="password">
               <div class="text-danger" *ngIf="addEmployeeForm.get('password')?.invalid && addEmployeeForm.get('password')?.touched">

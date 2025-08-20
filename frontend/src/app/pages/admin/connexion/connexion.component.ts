@@ -44,6 +44,11 @@ export class ConnexionComponent implements OnInit {
     });
   }
 
+
+  retour(): void {
+    this.router.navigate(['accueil/']); 
+  }
+
   showPassword = true
 
     onSubmit() {
