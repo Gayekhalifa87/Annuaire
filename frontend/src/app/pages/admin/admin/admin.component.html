@@ -42,23 +42,24 @@
   <div class="card">
     <div class="card-body">
       <h5 class="card-title">Total employés</h5>
-      <p class="card-text">6</p>
+      <p class="card-text">{{ employeeService.filteredEmployees.length }}</p>
     </div>
   </div>
 
   <div class="card">
-    <div class="card-body">
-      <h5 class="card-title">Total département</h5>
-      <p class="card-text">2</p>
-    </div>
+  <div class="card-body">
+    <h5 class="card-title">Total départements</h5>
+    <p class="card-text">{{ employeeService.getDepartmentCount() }}</p>
   </div>
+</div>
 
   <div class="card">
-    <div class="card-body">
-      <h5 class="card-title">Total services</h5>
-      <p class="card-text">3</p>
-    </div>
+  <div class="card-body">
+    <h5 class="card-title">Total services</h5>
+    <p class="card-text">{{ employeeService.getServiceCount() }}</p>
   </div>
+</div>
+
 </div>
 
 <!-- Gestion des employes  -->
@@ -234,6 +235,8 @@
     </li>
   </ul>
 </nav>
+
+
 
 
 

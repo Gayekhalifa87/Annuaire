@@ -47,7 +47,8 @@ export class AdminComponent {
     });
   }
 
-   
+   countsByDept: { [key: string]: number } = {};
+
   loadEmployees() {
     this.employeeService.loadEmployees();
   }
@@ -79,6 +80,7 @@ export class AdminComponent {
   });
 
   this.employeeService.loadEmployees();
+
 }
 
   private updatePasswordValidator(role: string) {
@@ -262,4 +264,6 @@ closeForm() {
   goToPage(page: number) {
     this.employeeService.goToPage(page);
   }
+
+
 }

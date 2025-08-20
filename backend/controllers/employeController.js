@@ -14,12 +14,9 @@ const {
 
 const { addHistorique } = require('../models/historiqueModel');
 
-const { addEmployeSupprime } = require('../models/employeSupprimeModel');
+const { countEmployees: countEmployeesModel } = require('../models/employeModel');
 
 const db = require('../config/db'); 
-
-//pour l envoi d email
-const nodemailer = require('nodemailer');
 
 
 const EmployeeModel = require('../models/employeModel');
@@ -33,7 +30,6 @@ const getAll = async (req, res) => {
   }
 };
 
-const { countEmployees: countEmployeesModel } = require('../models/employeModel');
 
 const countEmployees = async (req, res) => {
   try {
@@ -137,7 +133,6 @@ const create = async (req, res) => {
   }
 };
 
-
 const update = async (req, res) => {
   const { id } = req.params;
   const updatedEmploye = req.body;
@@ -166,9 +161,6 @@ const update = async (req, res) => {
 }
 
 };
-
-
-
 
 const remove = async (req, res) => {
   const { id } = req.params;
@@ -245,12 +237,12 @@ const remove = async (req, res) => {
 const crypto = require('crypto');
 
 const generateResetToken = () => {
-  return crypto.randomBytes(32).toString('hex'); // token aléatoire de 64 caractères hexadécimaux
+  return crypto.randomBytes(32).toString('hex'); 
 };
 
 const setResetToken = async (id) => {
   const token = generateResetToken();
-  const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 heure
+  const expires = new Date(Date.now() + 60 * 60 * 1000); 
 
   await db.query(
     'UPDATE employes SET resetToken = ?, resetTokenExpires = ? WHERE id = ?',
@@ -260,7 +252,7 @@ const setResetToken = async (id) => {
   return { token, expires };
 };
 
-const transporter = require('../config/mailer'); // ton transporteur Nodemailer
+const transporter = require('../config/mailer'); 
 
 const switchRole = async (req, res) => {
   const { id } = req.params;
@@ -363,9 +355,6 @@ const resetPassword = async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur' });
   }
 };
-
-
-
 
 const searchAdvanced = async (req, res) => {
   try {

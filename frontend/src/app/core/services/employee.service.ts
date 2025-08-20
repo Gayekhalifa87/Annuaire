@@ -149,14 +149,23 @@ createEmployee(employee: Employee): Observable<Employee> {
   
 
 
-
-
 changePassword(id: string, current: string, newPassword: string, confirm: string) {
   const token = localStorage.getItem('auth_token');
   const headers = { Authorization: `Bearer ${token}` };
   const body = { current, new: newPassword, confirm };
 
   return this.http.put<{message: string}>(`${this.apiUrl}/${id}/password`, body, { headers });
+}
+
+getDepartmentCount(): number {
+  const departments = this.filteredEmployees.map(emp => emp.direction);
+  const uniqueDepartments = new Set(departments); // enlève les doublons
+  return uniqueDepartments.size;
+}
+getServiceCount(): number {
+  const services = this.filteredEmployees.map(emp => emp.service);
+  const uniqueServices = new Set(services);
+  return uniqueServices.size;
 }
 
   

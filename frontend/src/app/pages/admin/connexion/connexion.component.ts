@@ -90,6 +90,6 @@ export class ConnexionComponent implements OnInit {
 
 
  retour(): void {
-    this.router.navigate(['forgotpassword/']); 
+    this.router.navigate(['accueil/']); 
   }
 }

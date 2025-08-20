@@ -42,7 +42,7 @@ export class ForgotPasswordComponent {
   }
 
   retour(){
-    alert('redirection');
+    /* alert('redirection'); */
     this.router.navigate(['/connexion']);
   }
 }

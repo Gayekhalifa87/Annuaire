@@ -26,10 +26,9 @@ export class ResetPasswordComponent implements OnInit {
     this.token = this.route.snapshot.paramMap.get('token')!;
   }
 
-
   onSubmit() {
     if (this.password !== this.confirm) {
-      alert('Les mots de passe ne correspondent pas');
+      /* alert('Les mots de passe ne correspondent pas'); */
       return;
     }
     this.http.post(`http://localhost:3000/api/employes/reset-password/${this.token}`, { newPassword: this.password })
