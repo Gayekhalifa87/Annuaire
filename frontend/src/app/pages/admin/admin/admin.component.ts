@@ -39,12 +39,12 @@ export class AdminComponent {
       ip: ['', Validators.required],
       telephone: ['', Validators.required],
       role: ['user', Validators.required],
-      password: ['']
+     /*  password: [''] */
     });
 
-    this.addEmployeeForm.get('role')?.valueChanges.subscribe(role => {
+   /*  this.addEmployeeForm.get('role')?.valueChanges.subscribe(role => {
       this.updatePasswordValidator(role);
-    });
+    }); */
   }
 
    countsByDept: { [key: string]: number } = {};
@@ -68,7 +68,7 @@ export class AdminComponent {
 
     
   });
-
+/* 
   this.addEmployeeForm.get('role')?.valueChanges.subscribe(role => {
     const passwordControl = this.addEmployeeForm.get('password');
     if (role === 'admin' && !this.isEditing) {
@@ -77,7 +77,7 @@ export class AdminComponent {
       passwordControl?.clearValidators();
     }
     passwordControl?.updateValueAndValidity();
-  });
+  }); */
 
   this.employeeService.loadEmployees();
 
@@ -96,11 +96,10 @@ export class AdminComponent {
 
 backendErrors: any = {};
 
-
   addEmployee() {
   if (!this.addEmployeeForm.valid) return;
 
-  this.backendErrors = {}; // reset errors
+  this.backendErrors = {};
   const employeeData = this.addEmployeeForm.value;
 
   const obs$ = this.isEditing
@@ -137,7 +136,6 @@ backendErrors: any = {};
     }
   });
 }
-
 
 resetForm() {
   this.addEmployeeForm.reset({ role: 'user' });
@@ -200,7 +198,7 @@ closeForm() {
             Swal.fire({
               title: 'changement de role',
               text: 'changement de role reussi',
-              timer: 2000,
+              timer: 1500,
               showConfirmButton: true,
               timerProgressBar: true,
             });
@@ -236,8 +234,8 @@ closeForm() {
           title: 'Déconnexion réussie',
           text: 'Vous serez redirigé vers l\'accueil.',
           icon: 'success',
-          timer: 2000,
-          showConfirmButton: true,
+          timer: 1500,
+          showConfirmButton: true,  
           timerProgressBar: true
         }).then(() => this.router.navigate(['/accueil']));
       },
@@ -264,6 +262,5 @@ closeForm() {
   goToPage(page: number) {
     this.employeeService.goToPage(page);
   }
-
 
 }

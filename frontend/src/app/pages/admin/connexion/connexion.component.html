@@ -55,10 +55,7 @@
               <path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="currentColor" stroke-width="2"/>
             </svg>
           </div>
-          <!-- <input type="password" class="input-modern" id="password" formControlName="password" placeholder="Votre mot de passe"  />
-            <span class="toggle-icon" (click)="showPassword = !showPassword">
-        <i class="fa-solid" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
-      </span> -->
+
       <div class="input-wrapper">
         <input 
           [type]="showPassword ? 'text' : 'password'" 
@@ -88,7 +85,7 @@
         </div>
    </div>
 
-      <button type="submit" class="btn-modern btn-primary login-button" [disabled]="connexionForm.invalid" [class.loading]="false">
+      <button type="submit" class="btn-modern  login-button" [disabled]="connexionForm.invalid" [class.loading]="false" id="btn1">
         Se connecter
       </button>
 

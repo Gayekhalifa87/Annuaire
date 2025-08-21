@@ -18,7 +18,6 @@ const { countEmployees: countEmployeesModel } = require('../models/employeModel'
 
 const db = require('../config/db'); 
 
-
 const EmployeeModel = require('../models/employeModel');
 const getAll = async (req, res) => {
   try {
@@ -29,7 +28,6 @@ const getAll = async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la récupération des employés' });
   }
 };
-
 
 const countEmployees = async (req, res) => {
   try {
