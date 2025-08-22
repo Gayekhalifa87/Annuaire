@@ -13,7 +13,7 @@ import { timer } from 'rxjs';
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, EnteteComponent, SearchComponent],
+  imports: [CommonModule, ReactiveFormsModule, SearchComponent],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css']
 })
@@ -114,8 +114,16 @@ backendErrors: any = {};
       } else {
         this.employeeService.employees.push(res);
       }
-      this.resetForm();
-      Swal.fire('Succès', this.isEditing ? 'Employé modifié avec succès' : 'Employé ajouté avec succès', 'success');
+      this.resetForm();/* 
+      Swal.fire('Succès', this.isEditing ? 'Employé modifié avec succès' : 'Employé ajouté avec succès', 'success'); */
+      Swal.fire({
+        title: 'Succès',
+        text: this.isEditing ? 'Employé modifié avec succès' : 'Employé ajouté avec succès',
+        icon: 'success',
+        timer: 1500, 
+        
+        showConfirmButton: true
+      });
       this.employeeService.loadEmployees();
     },
     error: err => {
@@ -144,11 +152,9 @@ resetForm() {
   this.editingEmployeeId = null;
   this.backendErrors = {};
 }
-
 closeForm() {
   this.resetForm();
 }
-
   editEmployee(employee: Employee) {
     this.isEditing = true;
     this.editingEmployeeId = employee.id;
@@ -171,8 +177,16 @@ closeForm() {
           next: () => {
             const index = this.employeeService.employees.findIndex(e => e.id === emp.id);
             if (index !== -1) this.employeeService.employees.splice(index, 1);
-            this.employeeService.loadEmployees();
-            Swal.fire('Supprimé !', "L'employé a été supprimé.", 'success',);
+            this.employeeService.loadEmployees();/* 
+            Swal.fire('Supprimé !', "L'employé a été supprimé.", 'success',); */
+            Swal.fire({
+              title: 'succes',
+              icon: 'success',
+              text: 'employe supprime avec succes',
+              timer: 10000,
+              showCancelButton: true,
+              showCloseButton : true
+            })
           },
           error: err => {
             console.error('Erreur lors de la suppression', err);
@@ -182,7 +196,6 @@ closeForm() {
       }
     });
   }
-
   onSwitchRole(id: string) {
     Swal.fire({
       title: 'Changer le rôle',

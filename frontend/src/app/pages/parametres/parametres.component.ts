@@ -47,9 +47,7 @@ export class ParametresComponent implements OnInit {
     }, { validator: this.passwordMatchValidator });
   }
 
-  
-
-  ngOnInit() {
+    ngOnInit() {
     this.authService.getMe().subscribe({
       next: (user) => {
         this.userId = user.id;
@@ -84,7 +82,6 @@ export class ParametresComponent implements OnInit {
         error: (err) => console.error('Erreur mise à jour', err)
       });
   }
-
   changePassword() {
   if (!this.passwordForm.valid) {
     console.error('Formulaire mot de passe invalide');

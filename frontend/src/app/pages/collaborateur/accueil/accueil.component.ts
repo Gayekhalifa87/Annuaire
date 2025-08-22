@@ -40,7 +40,6 @@ export class AccueilComponent {
     });
 }
 
-
   trackByEmployee(index: number, emp: Employee) {
     return emp.ip; 
   }

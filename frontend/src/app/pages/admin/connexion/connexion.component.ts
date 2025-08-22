@@ -65,7 +65,6 @@ export class ConnexionComponent implements OnInit {
         // Stockage du token dans le localStorage
         localStorage.setItem('auth_token', res.token);
 
-        console.log('Token JWT stocké :', res.token);
       }
 
       // Redirection après connexion réussie
